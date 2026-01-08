@@ -41,6 +41,8 @@ h1,h2{text-align:center;margin:0}
   text-align:center;
   margin-bottom:16px;
 }
+.notice strong{font-size:18px;display:block}
+.notice span{font-size:12px}
 
 input,button{
   width:100%;
@@ -106,6 +108,21 @@ button{
 .chat-input input{flex:1;margin:0}
 .chat-input button{width:auto;margin-left:8px}
 
+/* CONTACT */
+.contact a{
+  display:block;
+  padding:14px;
+  border-radius:14px;
+  text-align:center;
+  color:#fff;
+  font-weight:600;
+  text-decoration:none;
+  margin-top:10px;
+}
+.telegram{background:#229ED9}
+.email{background:#0f766e}
+.phone{background:#166534}
+
 .footer{text-align:center;font-size:12px;opacity:.55;margin-top:16px}
 </style>
 </head>
@@ -114,14 +131,11 @@ button{
 
 <div class="app">
 
-<!-- AUTH -->
-<div class="card" id="authCard">
-  <h2>Private Client Login</h2>
-  <input id="email" type="email" placeholder="Email">
-  <input id="password" type="password" placeholder="Password">
-  <button onclick="signup()">Sign Up</button>
-  <button onclick="login()">Login</button>
-  <p id="authMsg"></p>
+<!-- LOGIN -->
+<div class="card" id="loginCard">
+  <h2>Private Client Access</h2>
+  <input placeholder="Email or Phone">
+  <button onclick="start()">Continue</button>
 </div>
 
 <!-- VERIFY -->
@@ -132,29 +146,43 @@ button{
     <span>Demo verification code</span>
   </div>
   <input id="otp" placeholder="Enter code">
-  <button onclick="verify()">Verify & Continue</button>
+  <button onclick="verify()">Verify & Enter</button>
 </div>
 
 <!-- DASHBOARD -->
 <div class="card hidden" id="dashboard">
-  <h1>Available Apartments</h1>
-  <div class="subtitle">Verified listings · Scroll to explore</div>
 
+  <h1>Capital Crest Housing</h1>
+  <div class="subtitle">Verified Apartments · Private Access</div>
+
+  <div class="notice">
+    <strong>$100 Inspection & Referral Fee</strong>
+    <span>70% refundable if no suitable apartment is found</span>
+  </div>
+
+  <div class="section-title">Available & Recently Rented</div>
   <div id="listings"></div>
 
   <div class="section-title">Saved Listings</div>
   <div id="saved"><p style="opacity:.6">No saved listings yet.</p></div>
 
-  <div class="section-title">Customer Care</div>
+  <div class="section-title">Customer Care / Support</div>
   <div class="chat-box" id="chat">
-    <div class="chat-msg"><em>Support:</em> Hello 👋 How can we help?</div>
+    <div class="chat-msg"><em>Support:</em> Hello 👋 How can we help you today?</div>
   </div>
   <div class="chat-input">
-    <input id="chatInput" placeholder="Type message">
+    <input id="chatInput" placeholder="Type your message">
     <button onclick="send()">Send</button>
   </div>
 
-  <div class="footer">Capital Crest Housing · Secure Portal</div>
+  <div class="section-title">Contact</div>
+  <div class="contact">
+    <a class="telegram" href="https://t.me/SSG_011">Chat on Telegram</a>
+    <a class="email" href="mailto:Confidentialuseonly6@gmail.com">Email: Confidentialuseonly6@gmail.com</a>
+    <a class="phone" href="tel:+13476103825">Call: +1 (347) 610-3825</a>
+  </div>
+
+  <div class="footer">Capital Crest Housing · Secure Client Portal</div>
 </div>
 
 </div>
@@ -162,14 +190,10 @@ button{
 <script>
 let code="";
 
-function signup(){
-  authMsg.textContent="Use Login if already registered";
-}
-
-function login(){
+function start(){
   code=Math.floor(100000+Math.random()*900000).toString();
   demoCode.textContent=code;
-  authCard.classList.add("hidden");
+  loginCard.classList.add("hidden");
   verifyCard.classList.remove("hidden");
 }
 
@@ -185,15 +209,13 @@ function loadListings(){
   const areas=["Bowie","Largo","Suitland","Kettering","Capitol Heights","Upper Marlboro"];
   const list=document.getElementById("listings");
   list.innerHTML="";
-  for(let i=1;i<=30;i++){
+  for(let i=1;i<=36;i++){
     const rented=i%5===0;
     list.innerHTML+=`
     <div class="listing">
       <strong>${i%3+1} Bedroom – ${areas[i%areas.length]}</strong>
-      <p>Clean unit · Safe area · Verified availability</p>
-      <span class="badge ${rented?"rented":"available"}">
-        ${rented?"Rented":"Available"}
-      </span>
+      <p>Verified unit · Safe area · Inspection available</p>
+      <span class="badge ${rented?"rented":"available"}">${rented?"Rented":"Available"}</span>
       <span class="badge">$${1200+i*25}–$${1400+i*30}</span>
       ${
         rented
