@@ -31,7 +31,7 @@ html,body{
   box-shadow:0 25px 70px rgba(0,0,0,.9);
 }
 
-h1{text-align:center;font-size:22px;margin:0}
+h1,h2{text-align:center;margin:0}
 .subtitle{text-align:center;font-size:13px;opacity:.8;margin:8px 0 16px}
 
 .notice{
@@ -41,8 +41,6 @@ h1{text-align:center;font-size:22px;margin:0}
   text-align:center;
   margin-bottom:16px;
 }
-.notice strong{font-size:18px;display:block}
-.notice span{font-size:12px}
 
 input,button{
   width:100%;
@@ -74,9 +72,6 @@ button{
   margin-bottom:14px;
 }
 
-.listing strong{display:block;font-size:15px}
-.listing p{font-size:13px;opacity:.8;margin:6px 0}
-
 .badge{
   display:inline-block;
   padding:4px 8px;
@@ -102,27 +97,11 @@ button{
   font-size:13px;
 }
 .chat-msg{margin-bottom:8px}
-.support{opacity:.7}
 .user{font-weight:600}
 
 .chat-input{display:flex;margin-top:10px}
 .chat-input input{flex:1;margin:0}
 .chat-input button{width:auto;margin-left:8px}
-
-.contact a{
-  display:block;
-  padding:14px;
-  border-radius:14px;
-  text-align:center;
-  color:#fff;
-  font-weight:600;
-  text-decoration:none;
-  margin-top:10px;
-}
-
-.telegram{background:#229ED9}
-.email{background:#0f766e}
-.phone{background:#166534}
 
 .footer{text-align:center;font-size:12px;opacity:.55;margin-top:16px}
 </style>
@@ -132,61 +111,48 @@ button{
 
 <div class="app">
 
+<!-- AUTH -->
+<div class="card" id="authCard">
+  <h2>Sign Up / Login</h2>
+  <input id="email" type="email" placeholder="Email">
+  <input id="password" type="password" placeholder="Password">
+  <button onclick="signup()">Sign Up</button>
+  <button onclick="login()">Login</button>
+  <p id="authMsg"></p>
+</div>
+
 <!-- STEP 1 -->
-<div class="card" id="step1">
+<div class="card hidden" id="step1">
   <h1>Capital Crest Housing</h1>
   <div class="subtitle">Secure Client Access</div>
-
-  <div class="notice">
-    <strong>$100 Inspection & Referral Fee</strong>
-    <span>70% refundable if no suitable apartment is found</span>
-  </div>
-
   <input id="contact" placeholder="Email or phone number">
   <button onclick="sendCode()">Send Verification Code</button>
 </div>
 
-<!-- STEP 2 OTP -->
+<!-- STEP 2 -->
 <div class="card hidden" id="step2">
   <h1>Verification</h1>
-  <div class="subtitle">Enter the code sent to you</div>
-
   <div class="notice">
     <strong id="demoCode"></strong>
-    <span>Demo verification code</span>
+    <span>Demo code</span>
   </div>
-
   <input id="otp" placeholder="Enter code">
-  <button onclick="verify()">Verify & Login</button>
+  <button onclick="verify()">Verify</button>
 </div>
 
 <!-- DASHBOARD -->
 <div class="card hidden" id="dashboard">
-
   <h1>Apartment Listings</h1>
-  <div class="subtitle">Verified availability · Scroll to explore</div>
-
-  <div class="section-title">Listings</div>
   <div id="listings"></div>
 
   <div class="section-title">Saved Listings</div>
-  <div id="saved"><p style="opacity:.6;font-size:13px">No saved listings yet.</p></div>
+  <div id="saved"><p>No saved listings yet.</p></div>
 
-  <div class="section-title">Customer Care / Support</div>
-  <div class="chat-box" id="chat">
-    <div class="chat-msg support"><em>Support:</em> Hello 👋 We’re here to help.</div>
-    <div class="chat-msg support"><em>Support:</em> Ask us about availability, inspections, or locations.</div>
-  </div>
+  <div class="section-title">Support Chat</div>
+  <div class="chat-box" id="chat"></div>
   <div class="chat-input">
-    <input id="chatInput" placeholder="Type your message">
+    <input id="chatInput" placeholder="Message">
     <button onclick="send()">Send</button>
-  </div>
-
-  <div class="section-title">Contact</div>
-  <div class="contact">
-    <a class="telegram" href="https://t.me/SSG_011">Telegram</a>
-    <a class="email" href="mailto:Confidentialuseonly6@gmail.com">Email</a>
-    <a class="phone" href="tel:+13476103825">Call</a>
   </div>
 
   <div class="footer">Capital Crest Housing · Secure Portal</div>
@@ -195,91 +161,82 @@ button{
 </div>
 
 <script>
-let code = "";
+let code="";
 
 function sendCode(){
-  code = Math.floor(100000 + Math.random()*900000).toString();
-  document.getElementById("demoCode").textContent = code;
-  document.getElementById("step1").classList.add("hidden");
-  document.getElementById("step2").classList.remove("hidden");
+  code=Math.floor(100000+Math.random()*900000).toString();
+  demoCode.textContent=code;
+  step1.classList.add("hidden");
+  step2.classList.remove("hidden");
 }
 
 function verify(){
-  if(document.getElementById("otp").value === code){
-    document.getElementById("step2").classList.add("hidden");
-    document.getElementById("dashboard").classList.remove("hidden");
+  if(otp.value===code){
+    step2.classList.add("hidden");
+    dashboard.classList.remove("hidden");
     loadListings();
-  } else {
-    alert("Invalid code");
-  }
+  } else alert("Invalid code");
 }
 
 function loadListings(){
-  const data=[];
-  const areas=["Bowie","Largo","Suitland","Kettering","District Heights","Capitol Heights","Upper Marlboro"];
-  for(let i=1;i<=24;i++){
-    data.push({
-      title:`${i%3+1} Bedroom – ${areas[i%areas.length]}`,
-      desc:"Clean unit · Safe neighborhood · Verified",
-      price:`$${1100+i*30}–$${1300+i*40}`,
-      status:i%4===0?"rented":"available"
-    });
-  }
-
   const list=document.getElementById("listings");
-  data.forEach(d=>{
+  const areas=["Bowie","Largo","Suitland","Kettering"];
+  for(let i=1;i<=10;i++){
     list.innerHTML+=`
-    <div class="listing ${d.status}">
-      <strong>${d.title}</strong>
-      <p>${d.desc}</p>
-      <span class="badge ${d.status}">${d.status==="available"?"Available":"Rented"}</span>
-      <span class="badge">${d.price}</span>
-      ${d.status==="available"
-        ?'<button class="save-btn" onclick="save(this)">Save Listing</button>'
-        :'<button class="save-btn disabled">Unavailable</button>'}
+    <div class="listing">
+      <strong>${i%2+1} Bedroom – ${areas[i%areas.length]}</strong>
+      <span class="badge available">Available</span>
+      <button class="save-btn" onclick="save(this)">Save</button>
     </div>`;
-  });
+  }
 }
 
 function save(btn){
-  const card=btn.closest(".listing");
-  const clone=card.cloneNode(true);
+  const clone=btn.closest(".listing").cloneNode(true);
   clone.querySelector("button")?.remove();
-  const badge=document.createElement("span");
-  badge.className="badge saved";
-  badge.textContent="Saved";
-  clone.appendChild(badge);
-
-  const saved=document.getElementById("saved");
-  if(saved.querySelector("p")) saved.innerHTML="";
+  clone.innerHTML+=`<span class="badge saved">Saved</span>`;
   saved.appendChild(clone);
 }
 
 function send(){
-  const input=document.getElementById("chatInput");
-  if(!input.value) return;
-  document.getElementById("chat").innerHTML+=
-    `<div class="chat-msg"><span class="user">You:</span> ${input.value}</div>`;
-  input.value="";
+  if(!chatInput.value) return;
+  chat.innerHTML+=`<div class="chat-msg"><span class="user">You:</span> ${chatInput.value}</div>`;
+  chatInput.value="";
 }
 </script>
+
 <script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-  import { getAuth } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } 
+from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
-  const firebaseConfig = {
-    apiKey: "PASTE_YOUR_API_KEY",
-    authDomain: "capital-creset-housing.firebaseapp.com",
-    projectId: "capital-creset-housing",
-    storageBucket: "capital-creset-housing.appspot.com",
-    messagingSenderId: "203155522222",
-    appId: "PASTE_YOUR_APP_ID"
-  };
+const firebaseConfig={
+  apiKey:"PASTE_YOUR_API_KEY",
+  authDomain:"capital-creset-housing.firebaseapp.com",
+  projectId:"capital-creset-housing",
+  storageBucket:"capital-creset-housing.appspot.com",
+  messagingSenderId:"203155522222",
+  appId:"PASTE_YOUR_APP_ID"
+};
 
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
+const app=initializeApp(firebaseConfig);
+const auth=getAuth(app);
 
-  console.log("Firebase connected ✅");
+window.signup=()=>{
+  createUserWithEmailAndPassword(auth,email.value,password.value)
+  .then(()=>authMsg.textContent="Signup successful ✅")
+  .catch(e=>authMsg.textContent=e.message);
+};
+
+window.login=()=>{
+  signInWithEmailAndPassword(auth,email.value,password.value)
+  .then(()=>{
+    authCard.classList.add("hidden");
+    step1.classList.remove("hidden");
+  })
+  .catch(e=>authMsg.textContent=e.message);
+};
 </script>
+
 </body>
 </html>
