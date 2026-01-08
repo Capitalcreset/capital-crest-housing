@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <title>Capital Crest Housing</title>
 
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 
 <style>
 *{box-sizing:border-box}
@@ -13,6 +13,7 @@ html,body{
   padding:0;
   background:#020617;
   font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto;
+  color:#fff;
 }
 
 .app{
@@ -27,7 +28,6 @@ html,body{
   background:#020617;
   border-radius:20px;
   padding:20px;
-  color:#fff;
   box-shadow:0 25px 70px rgba(0,0,0,.9);
 }
 
@@ -72,6 +72,9 @@ button{
   margin-bottom:14px;
 }
 
+.listing strong{display:block;font-size:15px}
+.listing p{font-size:13px;opacity:.8;margin:6px 0}
+
 .badge{
   display:inline-block;
   padding:4px 8px;
@@ -113,7 +116,7 @@ button{
 
 <!-- AUTH -->
 <div class="card" id="authCard">
-  <h2>Sign Up / Login</h2>
+  <h2>Private Client Login</h2>
   <input id="email" type="email" placeholder="Email">
   <input id="password" type="password" placeholder="Password">
   <button onclick="signup()">Sign Up</button>
@@ -121,37 +124,33 @@ button{
   <p id="authMsg"></p>
 </div>
 
-<!-- STEP 1 -->
-<div class="card hidden" id="step1">
-  <h1>Capital Crest Housing</h1>
-  <div class="subtitle">Secure Client Access</div>
-  <input id="contact" placeholder="Email or phone number">
-  <button onclick="sendCode()">Send Verification Code</button>
-</div>
-
-<!-- STEP 2 -->
-<div class="card hidden" id="step2">
-  <h1>Verification</h1>
+<!-- VERIFY -->
+<div class="card hidden" id="verifyCard">
+  <h2>Verification</h2>
   <div class="notice">
     <strong id="demoCode"></strong>
-    <span>Demo code</span>
+    <span>Demo verification code</span>
   </div>
   <input id="otp" placeholder="Enter code">
-  <button onclick="verify()">Verify</button>
+  <button onclick="verify()">Verify & Continue</button>
 </div>
 
 <!-- DASHBOARD -->
 <div class="card hidden" id="dashboard">
-  <h1>Apartment Listings</h1>
+  <h1>Available Apartments</h1>
+  <div class="subtitle">Verified listings · Scroll to explore</div>
+
   <div id="listings"></div>
 
   <div class="section-title">Saved Listings</div>
-  <div id="saved"><p>No saved listings yet.</p></div>
+  <div id="saved"><p style="opacity:.6">No saved listings yet.</p></div>
 
-  <div class="section-title">Support Chat</div>
-  <div class="chat-box" id="chat"></div>
+  <div class="section-title">Customer Care</div>
+  <div class="chat-box" id="chat">
+    <div class="chat-msg"><em>Support:</em> Hello 👋 How can we help?</div>
+  </div>
   <div class="chat-input">
-    <input id="chatInput" placeholder="Message">
+    <input id="chatInput" placeholder="Type message">
     <button onclick="send()">Send</button>
   </div>
 
@@ -163,38 +162,53 @@ button{
 <script>
 let code="";
 
-function sendCode(){
+function signup(){
+  authMsg.textContent="Use Login if already registered";
+}
+
+function login(){
   code=Math.floor(100000+Math.random()*900000).toString();
   demoCode.textContent=code;
-  step1.classList.add("hidden");
-  step2.classList.remove("hidden");
+  authCard.classList.add("hidden");
+  verifyCard.classList.remove("hidden");
 }
 
 function verify(){
   if(otp.value===code){
-    step2.classList.add("hidden");
+    verifyCard.classList.add("hidden");
     dashboard.classList.remove("hidden");
     loadListings();
   } else alert("Invalid code");
 }
 
 function loadListings(){
+  const areas=["Bowie","Largo","Suitland","Kettering","Capitol Heights","Upper Marlboro"];
   const list=document.getElementById("listings");
-  const areas=["Bowie","Largo","Suitland","Kettering"];
-  for(let i=1;i<=10;i++){
+  list.innerHTML="";
+  for(let i=1;i<=30;i++){
+    const rented=i%5===0;
     list.innerHTML+=`
     <div class="listing">
-      <strong>${i%2+1} Bedroom – ${areas[i%areas.length]}</strong>
-      <span class="badge available">Available</span>
-      <button class="save-btn" onclick="save(this)">Save</button>
+      <strong>${i%3+1} Bedroom – ${areas[i%areas.length]}</strong>
+      <p>Clean unit · Safe area · Verified availability</p>
+      <span class="badge ${rented?"rented":"available"}">
+        ${rented?"Rented":"Available"}
+      </span>
+      <span class="badge">$${1200+i*25}–$${1400+i*30}</span>
+      ${
+        rented
+        ?'<button class="save-btn disabled">Unavailable</button>'
+        :'<button class="save-btn" onclick="save(this)">Save Listing</button>'
+      }
     </div>`;
   }
 }
 
 function save(btn){
   const clone=btn.closest(".listing").cloneNode(true);
-  clone.querySelector("button")?.remove();
+  clone.querySelector("button").remove();
   clone.innerHTML+=`<span class="badge saved">Saved</span>`;
+  if(saved.querySelector("p")) saved.innerHTML="";
   saved.appendChild(clone);
 }
 
@@ -203,39 +217,6 @@ function send(){
   chat.innerHTML+=`<div class="chat-msg"><span class="user">You:</span> ${chatInput.value}</div>`;
   chatInput.value="";
 }
-</script>
-
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } 
-from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-
-const firebaseConfig={
-  apiKey: "AIzaSyDxxxxxxxxxxxxx",
-  authDomain:"capital-creset-housing.firebaseapp.com",
-  projectId:"capital-creset-housing",
-  storageBucket:"capital-creset-housing.appspot.com",
-  messagingSenderId:"203155522222",
-  appId:"1:203155522222:web:abc123xyz"
-};
-
-const app=initializeApp(firebaseConfig);
-const auth=getAuth(app);
-
-window.signup=()=>{
-  createUserWithEmailAndPassword(auth,email.value,password.value)
-  .then(()=>authMsg.textContent="Signup successful ✅")
-  .catch(e=>authMsg.textContent=e.message);
-};
-
-window.login=()=>{
-  signInWithEmailAndPassword(auth,email.value,password.value)
-  .then(()=>{
-    authCard.classList.add("hidden");
-    step1.classList.remove("hidden");
-  })
-  .catch(e=>authMsg.textContent=e.message);
-};
 </script>
 
 </body>
