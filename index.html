@@ -4,8 +4,7 @@
 <meta charset="UTF-8">
 <title>Capital Crest Housing</title>
 
-<meta name="viewport"
-content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
 
 <style>
 *{box-sizing:border-box}
@@ -40,7 +39,7 @@ h1{text-align:center;font-size:22px;margin:0}
   border-radius:14px;
   padding:14px;
   text-align:center;
-  margin-bottom:18px;
+  margin-bottom:16px;
 }
 .notice strong{font-size:18px;display:block}
 .notice span{font-size:12px}
@@ -90,15 +89,8 @@ button{
 .rented{background:#7f1d1d}
 .saved{background:#1e40af}
 
-.save-btn{
-  margin-top:8px;
-  background:#334155;
-}
-
-.disabled{
-  opacity:.45;
-  pointer-events:none;
-}
+.save-btn{margin-top:8px;background:#334155}
+.disabled{opacity:.45;pointer-events:none}
 
 /* CHAT */
 .chat-box{
@@ -109,24 +101,13 @@ button{
   overflow-y:auto;
   font-size:13px;
 }
-.chat-msg{
-  margin-bottom:8px;
-}
+.chat-msg{margin-bottom:8px}
 .support{opacity:.7}
 .user{font-weight:600}
 
-.chat-input{
-  display:flex;
-  margin-top:10px;
-}
-.chat-input input{
-  flex:1;
-  margin:0;
-}
-.chat-input button{
-  width:auto;
-  margin-left:8px;
-}
+.chat-input{display:flex;margin-top:10px}
+.chat-input input{flex:1;margin:0}
+.chat-input button{width:auto;margin-left:8px}
 
 .contact a{
   display:block;
@@ -151,106 +132,50 @@ button{
 
 <div class="app">
 
-<!-- LOGIN -->
-<div class="card" id="login">
+<!-- STEP 1 -->
+<div class="card" id="step1">
   <h1>Capital Crest Housing</h1>
-  <div class="subtitle">Private Client Access</div>
+  <div class="subtitle">Secure Client Access</div>
 
   <div class="notice">
     <strong>$100 Inspection & Referral Fee</strong>
     <span>70% refundable if no suitable apartment is found</span>
   </div>
 
-  <input placeholder="Email or phone number">
-  <input type="password" placeholder="Password">
-  <button onclick="login()">Log In / Sign Up</button>
+  <input id="contact" placeholder="Email or phone number">
+  <button onclick="sendCode()">Send Verification Code</button>
+</div>
+
+<!-- STEP 2 OTP -->
+<div class="card hidden" id="step2">
+  <h1>Verification</h1>
+  <div class="subtitle">Enter the code sent to you</div>
+
+  <div class="notice">
+    <strong id="demoCode"></strong>
+    <span>Demo verification code</span>
+  </div>
+
+  <input id="otp" placeholder="Enter code">
+  <button onclick="verify()">Verify & Login</button>
 </div>
 
 <!-- DASHBOARD -->
 <div class="card hidden" id="dashboard">
 
   <h1>Apartment Listings</h1>
-  <div class="subtitle">Scroll to explore verified availability</div>
+  <div class="subtitle">Verified availability · Scroll to explore</div>
 
   <div class="section-title">Listings</div>
-  <div id="listings">
+  <div id="listings"></div>
 
-    <!-- MANY LISTINGS -->
-    <div class="listing available">
-      <strong>1 Bedroom – Upper Marlboro</strong>
-      <p>Modern unit · Quiet area · Parking</p>
-      <span class="badge available">Available</span>
-      <span class="badge">$1,350–$1,500</span>
-      <button class="save-btn" onclick="save(this)">Save Listing</button>
-    </div>
+  <div class="section-title">Saved Listings</div>
+  <div id="saved"><p style="opacity:.6;font-size:13px">No saved listings yet.</p></div>
 
-    <div class="listing available">
-      <strong>Studio – Kettering</strong>
-      <p>Secure building · Close to transit</p>
-      <span class="badge available">Available</span>
-      <span class="badge">$1,100–$1,250</span>
-      <button class="save-btn" onclick="save(this)">Save Listing</button>
-    </div>
-
-    <div class="listing rented">
-      <strong>2 Bedroom – Largo</strong>
-      <p>Family friendly · Recently leased</p>
-      <span class="badge rented">Rented</span>
-      <span class="badge">$1,750–$1,950</span>
-      <button class="save-btn disabled">Unavailable</button>
-    </div>
-
-    <div class="listing available">
-      <strong>Basement Apartment – Bowie</strong>
-      <p>Private entrance · Renovated</p>
-      <span class="badge available">Available</span>
-      <span class="badge">$1,200–$1,350</span>
-      <button class="save-btn" onclick="save(this)">Save Listing</button>
-    </div>
-
-    <div class="listing rented">
-      <strong>Private Room – Capitol Heights</strong>
-      <p>Shared home · Utilities included</p>
-      <span class="badge rented">Rented</span>
-      <span class="badge">$850–$950</span>
-      <button class="save-btn disabled">Unavailable</button>
-    </div>
-
-    <div class="listing available">
-      <strong>1 Bedroom – District Heights</strong>
-      <p>Near transit · Updated kitchen</p>
-      <span class="badge available">Available</span>
-      <span class="badge">$1,400–$1,600</span>
-      <button class="save-btn" onclick="save(this)">Save Listing</button>
-    </div>
-
-    <div class="listing available">
-      <strong>2 Bedroom – Suitland</strong>
-      <p>Spacious layout · Balcony</p>
-      <span class="badge available">Available</span>
-      <span class="badge">$1,650–$1,800</span>
-      <button class="save-btn" onclick="save(this)">Save Listing</button>
-    </div>
-
-    <div class="listing rented">
-      <strong>Studio – New Carrollton</strong>
-      <p>High demand · Fully leased</p>
-      <span class="badge rented">Rented</span>
-      <span class="badge">$1,200–$1,350</span>
-      <button class="save-btn disabled">Unavailable</button>
-    </div>
-
-  </div>
-
-  <div class="section-title" id="savedTitle">Saved Listings</div>
-  <div id="saved">
-    <p style="font-size:13px;opacity:.6">No saved listings yet.</p>
-  </div>
-
-  <!-- SUPPORT CHAT -->
   <div class="section-title">Customer Care / Support</div>
   <div class="chat-box" id="chat">
-    <div class="chat-msg support"><em>Support:</em> Hello 👋 How can we assist you today?</div>
+    <div class="chat-msg support"><em>Support:</em> Hello 👋 We’re here to help.</div>
+    <div class="chat-msg support"><em>Support:</em> Ask us about availability, inspections, or locations.</div>
   </div>
   <div class="chat-input">
     <input id="chatInput" placeholder="Type your message">
@@ -264,43 +189,78 @@ button{
     <a class="phone" href="tel:+13476103825">Call</a>
   </div>
 
-  <div class="footer">Capital Crest Housing · Secure Access</div>
+  <div class="footer">Capital Crest Housing · Secure Portal</div>
 </div>
 
 </div>
 
 <script>
-function login(){
-  document.getElementById("login").classList.add("hidden");
-  document.getElementById("dashboard").classList.remove("hidden");
+let code = "";
+
+function sendCode(){
+  code = Math.floor(100000 + Math.random()*900000).toString();
+  document.getElementById("demoCode").textContent = code;
+  document.getElementById("step1").classList.add("hidden");
+  document.getElementById("step2").classList.remove("hidden");
 }
 
-function save(button){
-  const listing = button.closest(".listing");
-  const saved = document.getElementById("saved");
+function verify(){
+  if(document.getElementById("otp").value === code){
+    document.getElementById("step2").classList.add("hidden");
+    document.getElementById("dashboard").classList.remove("hidden");
+    loadListings();
+  } else {
+    alert("Invalid code");
+  }
+}
 
-  const clone = listing.cloneNode(true);
+function loadListings(){
+  const data=[];
+  const areas=["Bowie","Largo","Suitland","Kettering","District Heights","Capitol Heights","Upper Marlboro"];
+  for(let i=1;i<=24;i++){
+    data.push({
+      title:`${i%3+1} Bedroom – ${areas[i%areas.length]}`,
+      desc:"Clean unit · Safe neighborhood · Verified",
+      price:`$${1100+i*30}–$${1300+i*40}`,
+      status:i%4===0?"rented":"available"
+    });
+  }
+
+  const list=document.getElementById("listings");
+  data.forEach(d=>{
+    list.innerHTML+=`
+    <div class="listing ${d.status}">
+      <strong>${d.title}</strong>
+      <p>${d.desc}</p>
+      <span class="badge ${d.status}">${d.status==="available"?"Available":"Rented"}</span>
+      <span class="badge">${d.price}</span>
+      ${d.status==="available"
+        ?'<button class="save-btn" onclick="save(this)">Save Listing</button>'
+        :'<button class="save-btn disabled">Unavailable</button>'}
+    </div>`;
+  });
+}
+
+function save(btn){
+  const card=btn.closest(".listing");
+  const clone=card.cloneNode(true);
   clone.querySelector("button")?.remove();
-
-  const badge = document.createElement("span");
-  badge.className = "badge saved";
-  badge.textContent = "Saved";
+  const badge=document.createElement("span");
+  badge.className="badge saved";
+  badge.textContent="Saved";
   clone.appendChild(badge);
 
-  if(saved.children[0]?.tagName==="P") saved.innerHTML="";
+  const saved=document.getElementById("saved");
+  if(saved.querySelector("p")) saved.innerHTML="";
   saved.appendChild(clone);
-
-  document.getElementById("savedTitle").scrollIntoView({behavior:"smooth"});
 }
 
 function send(){
-  const input = document.getElementById("chatInput");
+  const input=document.getElementById("chatInput");
   if(!input.value) return;
-
-  const chat = document.getElementById("chat");
-  chat.innerHTML += `<div class="chat-msg"><span class="user">You:</span> ${input.value}</div>`;
+  document.getElementById("chat").innerHTML+=
+    `<div class="chat-msg"><span class="user">You:</span> ${input.value}</div>`;
   input.value="";
-  chat.scrollTop = chat.scrollHeight;
 }
 </script>
 
