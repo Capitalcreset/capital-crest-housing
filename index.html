@@ -48,7 +48,7 @@ h1{text-align:center;font-size:22px;margin-top:0}
 .notice strong{font-size:18px;display:block}
 .notice span{font-size:13px}
 
-input,select,button{
+input,button{
   width:100%;
   padding:14px;
   border-radius:12px;
@@ -65,11 +65,6 @@ button{
 
 .hidden{display:none}
 
-.filters{
-  display:flex;
-  gap:8px;
-}
-
 .section-title{
   margin:18px 0 10px;
   font-size:16px;
@@ -84,27 +79,32 @@ button{
 }
 
 .listing strong{display:block}
-.listing p{font-size:13px;opacity:.85}
+
+.listing p{
+  font-size:13px;
+  opacity:.85;
+  margin:6px 0;
+}
 
 .tag{
   display:inline-block;
-  background:#0f766e;
   padding:4px 8px;
   border-radius:8px;
   font-size:11px;
   margin-right:6px;
 }
 
+.vacant{background:#166534}
+.rented{background:#7f1d1d}
+
 .save{
   margin-top:8px;
   background:#334155;
 }
 
-.loading{
-  text-align:center;
-  font-size:14px;
-  opacity:.8;
-  padding:20px;
+.disabled{
+  opacity:.5;
+  pointer-events:none;
 }
 
 .contact a{
@@ -148,86 +148,59 @@ button{
 <!-- DASHBOARD -->
 <div class="card hidden" id="dash">
   <h1>Available Apartments</h1>
-  <div class="subtitle">Matched listings in your area</div>
+  <div class="subtitle">Scroll to explore available options</div>
 
-  <!-- FILTERS -->
-  <div class="filters">
-    <select>
-      <option>Bedrooms</option>
-      <option>Studio</option>
-      <option>1 Bedroom</option>
-      <option>2 Bedrooms</option>
-    </select>
+  <div class="section-title">Listings</div>
+  <div id="listings">
 
-    <select>
-      <option>Price Range</option>
-      <option>$800 – $1,000</option>
-      <option>$1,000 – $1,400</option>
-      <option>$1,400 – $2,000</option>
-    </select>
-  </div>
-
-  <!-- LOADING -->
-  <div class="loading" id="loading">Loading listings…</div>
-
-  <!-- LISTINGS -->
-  <div id="listings" class="hidden">
-
-    <!-- MANY LISTINGS -->
     <div class="listing">
       <strong>1 Bedroom – Upper Marlboro</strong>
-      <p>Updated unit, quiet street, close to shopping.</p>
+      <p>Quiet area, updated unit, near shopping.</p>
+      <span class="tag vacant">Vacant</span>
       <span class="tag">$1,350–$1,500</span>
-      <button class="save">Save Listing</button>
+      <button class="save" onclick="saveListing(this)">Save Listing</button>
     </div>
 
     <div class="listing">
       <strong>Studio – Kettering</strong>
-      <p>Secure building, parking included, move-in ready.</p>
+      <p>Secure building, parking included.</p>
+      <span class="tag vacant">Vacant</span>
       <span class="tag">$1,100–$1,250</span>
-      <button class="save">Save Listing</button>
+      <button class="save" onclick="saveListing(this)">Save Listing</button>
     </div>
 
     <div class="listing">
       <strong>2 Bedroom – Largo</strong>
-      <p>Family friendly, schools nearby, pet friendly.</p>
+      <p>Family-friendly, pet friendly.</p>
+      <span class="tag rented">Rented</span>
       <span class="tag">$1,750–$1,950</span>
-      <button class="save">Save Listing</button>
+      <button class="save disabled">Unavailable</button>
     </div>
 
     <div class="listing">
       <strong>Private Room – Shared Home</strong>
-      <p>Furnished, utilities included, flexible lease.</p>
+      <p>Furnished, utilities included.</p>
+      <span class="tag vacant">Vacant</span>
       <span class="tag">$850–$950</span>
-      <button class="save">Save Listing</button>
+      <button class="save" onclick="saveListing(this)">Save Listing</button>
     </div>
 
     <div class="listing">
       <strong>Basement Apartment</strong>
-      <p>Private entrance, renovated, quiet owner.</p>
+      <p>Private entrance, renovated.</p>
+      <span class="tag vacant">Vacant</span>
       <span class="tag">$1,000–$1,200</span>
-      <button class="save">Save Listing</button>
-    </div>
-
-    <!-- SCROLL FEEL -->
-    <div class="listing">
-      <strong>1 Bedroom – Bowie Area</strong>
-      <p>Modern finishes, in-unit laundry.</p>
-      <span class="tag">$1,400–$1,600</span>
-      <button class="save">Save Listing</button>
-    </div>
-
-    <div class="listing">
-      <strong>Studio – Capitol Heights</strong>
-      <p>Affordable, transit nearby.</p>
-      <span class="tag">$950–$1,050</span>
-      <button class="save">Save Listing</button>
+      <button class="save" onclick="saveListing(this)">Save Listing</button>
     </div>
 
   </div>
 
-  <div class="section-title">Direct Contact</div>
+  <div class="section-title">Saved Listings</div>
+  <div id="saved">
+    <p style="font-size:13px;opacity:.7;">No saved listings yet.</p>
+  </div>
 
+  <div class="section-title">Direct Contact</div>
   <div class="contact">
     <a class="telegram" href="https://t.me/SSG_011">Telegram</a>
     <a class="email" href="mailto:Confidentialuseonly6@gmail.com">Email</a>
@@ -243,11 +216,12 @@ button{
 function enter(){
   document.getElementById("login").classList.add("hidden");
   document.getElementById("dash").classList.remove("hidden");
+}
 
-  setTimeout(()=>{
-    document.getElementById("loading").classList.add("hidden");
-    document.getElementById("listings").classList.remove("hidden");
-  },1500);
+function saveListing(btn){
+  const listing = btn.parentElement;
+  btn.remove();
+  document.getElementById("saved").appendChild(listing);
 }
 </script>
 
