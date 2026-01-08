@@ -2,65 +2,105 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+
 <title>Capital Crest Housing</title>
 
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+<!-- CRITICAL: viewport fix -->
+<meta name="viewport"
+content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 
 <style>
-*{box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto}
-body{
+html,body{
   margin:0;
-  min-height:100vh;
-  background:radial-gradient(circle at top,#0f172a,#020617);
+  padding:0;
+  width:100%;
+  height:100%;
+  min-height:100%;
+  background:#020617;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto;
+  -webkit-text-size-adjust:100%;
+}
+
+body{
   display:flex;
   align-items:center;
   justify-content:center;
+  overflow:hidden;
+}
+
+/* FULLSCREEN WRAPPER */
+.app{
+  width:100vw;
+  height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:16px;
+  background:radial-gradient(circle at top,#0f172a,#020617);
+}
+
+/* CARD */
+.card{
+  width:100%;
+  max-width:420px;
+  background:rgba(2,6,23,.96);
+  border-radius:18px;
+  padding:22px;
+  box-shadow:0 30px 80px rgba(0,0,0,.8);
   color:#fff;
 }
-.hidden{display:none}
 
-.container{width:100%;max-width:430px;padding:18px}
-
-.card{
-  background:rgba(2,6,23,.95);
-  border-radius:16px;
-  padding:22px;
-  box-shadow:0 20px 60px rgba(0,0,0,.7);
-}
-
-h1{text-align:center;margin:0 0 6px;font-size:22px}
-.subtitle{text-align:center;font-size:14px;opacity:.85;margin-bottom:18px}
-
-.notice{
-  background:linear-gradient(135deg,#1d4ed8,#2563eb);
-  border-radius:12px;
-  padding:14px;
+h1{
+  margin:0;
   text-align:center;
+  font-size:22px;
+}
+.subtitle{
+  text-align:center;
+  font-size:14px;
+  opacity:.85;
   margin-bottom:18px;
 }
-.notice strong{font-size:18px;display:block}
-.notice span{font-size:13px;opacity:.95}
 
-label{font-size:13px;opacity:.8}
+/* NOTICE */
+.notice{
+  background:linear-gradient(135deg,#1d4ed8,#2563eb);
+  border-radius:14px;
+  padding:14px;
+  text-align:center;
+  margin-bottom:20px;
+}
+.notice strong{
+  display:block;
+  font-size:18px;
+}
+.notice span{
+  font-size:13px;
+}
+
+/* FORM */
+label{
+  font-size:13px;
+  opacity:.85;
+}
 input{
   width:100%;
   padding:14px;
-  border-radius:10px;
+  border-radius:12px;
   border:none;
   margin:6px 0 14px;
-  font-size:15px;
+  font-size:16px;
 }
 
 button{
   width:100%;
-  padding:14px;
+  padding:15px;
   border:none;
-  border-radius:12px;
+  border-radius:14px;
   background:#2563eb;
   color:#fff;
   font-size:16px;
   font-weight:600;
-  cursor:pointer;
 }
 
 .secondary{
@@ -68,73 +108,71 @@ button{
   margin-top:10px;
 }
 
-.divider{
-  height:1px;
-  background:rgba(255,255,255,.1);
-  margin:20px 0;
-}
-
+/* LISTINGS */
 .listing{
-  background:rgba(255,255,255,.04);
+  background:rgba(255,255,255,.05);
   padding:14px;
-  border-radius:12px;
+  border-radius:14px;
   margin-bottom:12px;
 }
-
 .listing strong{display:block;margin-bottom:6px}
 
+/* CHAT */
 .chat-box{
   background:#020617;
-  border-radius:12px;
+  border-radius:14px;
   padding:12px;
   height:160px;
   overflow-y:auto;
   font-size:14px;
 }
-
 .chat-input{
   display:flex;
   margin-top:10px;
 }
-
 .chat-input input{
   flex:1;
   margin:0;
 }
-
 .chat-input button{
   width:auto;
   margin-left:8px;
-  padding:14px 16px;
 }
 
+/* CONTACT */
 .contact a{
   display:block;
+  padding:14px;
+  border-radius:14px;
   text-align:center;
-  padding:12px;
-  border-radius:10px;
-  margin-top:10px;
   color:#fff;
-  text-decoration:none;
   font-weight:600;
+  margin-top:10px;
+  text-decoration:none;
 }
-
 .telegram{background:#229ED9}
 .email{background:#0f766e}
 .phone{background:#166534}
 
-.footer{text-align:center;font-size:12px;opacity:.7;margin-top:14px}
+.hidden{display:none}
+
+.footer{
+  text-align:center;
+  font-size:12px;
+  opacity:.7;
+  margin-top:12px;
+}
 </style>
 </head>
 
 <body>
 
-<div class="container">
+<div class="app">
 
-<!-- LOGIN SCREEN -->
-<div class="card" id="loginCard">
+<!-- LOGIN -->
+<div class="card" id="login">
   <h1>Capital Crest Housing</h1>
-  <div class="subtitle">Secure Client Access Portal</div>
+  <div class="subtitle">Client Access Portal</div>
 
   <div class="notice">
     <strong>$100 Inspection & Referral Fee</strong>
@@ -142,80 +180,68 @@ button{
   </div>
 
   <label>Email or Phone</label>
-  <input id="userInput" placeholder="Email or phone number">
+  <input placeholder="Email or phone number">
 
   <label>Password</label>
   <input type="password" placeholder="Password">
 
-  <button onclick="login()">Log In / Sign Up</button>
+  <button onclick="enter()">Log In / Sign Up</button>
 
-  <div class="footer">Login required to view listings & chat</div>
+  <div class="footer">Login required to continue</div>
 </div>
 
 <!-- DASHBOARD -->
-<div class="card hidden" id="dashboard">
-
+<div class="card hidden" id="dash">
   <h1>Available Apartments</h1>
-  <div class="subtitle">Based on your selected area</div>
+  <div class="subtitle">Private listings in your area</div>
 
   <div class="listing">
     <strong>1 Bedroom Apartment</strong>
-    Modern unit · Safe neighborhood · Near transit
+    Near transit · Safe area · Modern unit
   </div>
 
   <div class="listing">
     <strong>2 Bedroom Apartment</strong>
-    Family friendly · Parking included · Quiet area
+    Family friendly · Parking included
   </div>
+
+  <button class="secondary" onclick="face()">Enable Face ID</button>
 
   <div class="listing">
-    <strong>Studio Apartment</strong>
-    Affordable · Move-in ready · Utilities available
+    <strong>Secure Chat</strong>
+    <div class="chat-box" id="chat">
+      <div><em>Support:</em> How can I help you?</div>
+    </div>
+    <div class="chat-input">
+      <input id="msg" placeholder="Type message">
+      <button onclick="send()">Send</button>
+    </div>
   </div>
-
-  <button class="secondary" onclick="enableFaceID()">Enable Face ID for Next Login</button>
-
-  <div class="divider"></div>
-
-  <strong>Secure Chat</strong>
-  <div class="chat-box" id="chatBox">
-    <div><em>Support:</em> Hi, how can I help you today?</div>
-  </div>
-
-  <div class="chat-input">
-    <input id="chatInput" placeholder="Type your message…">
-    <button onclick="sendChat()">Send</button>
-  </div>
-
-  <div class="divider"></div>
 
   <div class="contact">
-    <a class="telegram" href="https://t.me/SSG_011" target="_blank">Message on Telegram</a>
-    <a class="email" href="mailto:capitalcresthousing@gmail.com">Email Support</a>
-    <a class="phone" href="tel:+1234567890">Call Directly</a>
+    <a class="telegram" href="https://t.me/SSG_011">Telegram</a>
+    <a class="email" href="mailto:Confidentialuseonly6@gmail.com">Email</a>
+    <a class="phone" href="tel:+13476103825">Call</a>
   </div>
 
-  <div class="footer">Inspections scheduled after confirmation</div>
+  <div class="footer">Capital Crest Housing</div>
 </div>
 
 </div>
 
 <script>
-function login(){
-  document.getElementById("loginCard").classList.add("hidden");
-  document.getElementById("dashboard").classList.remove("hidden");
+function enter(){
+  document.getElementById("login").classList.add("hidden");
+  document.getElementById("dash").classList.remove("hidden");
 }
-
-function sendChat(){
-  const input=document.getElementById("chatInput");
-  if(!input.value)return;
-  const box=document.getElementById("chatBox");
-  box.innerHTML+=`<div><strong>You:</strong> ${input.value}</div>`;
-  box.scrollTop=box.scrollHeight;
-  input.value="";
+function send(){
+  const m=document.getElementById("msg");
+  if(!m.value)return;
+  document.getElementById("chat").innerHTML+=
+    `<div><strong>You:</strong> ${m.value}</div>`;
+  m.value="";
 }
-
-function enableFaceID(){
+function face(){
   alert("Face ID enabled for future logins on this device.");
 }
 </script>
