@@ -3,11 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <title>Capital Crest Housing</title>
-
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 
 <style>
 *{box-sizing:border-box}
+
 html,body{
   margin:0;
   padding:0;
@@ -18,41 +18,46 @@ html,body{
 
 .app{
   min-height:100vh;
-  padding:16px;
+  padding:20px;
   background:linear-gradient(180deg,#0f172a,#020617);
 }
 
+/* CARD */
 .card{
   max-width:440px;
   margin:0 auto 20px;
   background:#020617;
-  border-radius:20px;
-  padding:20px;
-  box-shadow:0 25px 70px rgba(0,0,0,.9);
+  border-radius:24px;
+  padding:22px;
+  box-shadow:0 25px 80px rgba(0,0,0,.85);
 }
 
 h1,h2{text-align:center;margin:0}
-.subtitle{text-align:center;font-size:13px;opacity:.8;margin:8px 0 16px}
+.subtitle{text-align:center;font-size:14px;opacity:.75;margin:6px 0 16px}
 
+/* NOTICE */
 .notice{
-  background:linear-gradient(135deg,#1d4ed8,#2563eb);
-  border-radius:14px;
-  padding:14px;
+  background:#2563eb;
+  border-radius:18px;
+  padding:16px;
   text-align:center;
   margin-bottom:18px;
 }
-.notice strong{font-size:18px;display:block}
-.notice span{font-size:12px}
+.notice strong{display:block;font-size:18px}
+.notice span{font-size:13px}
 
+/* FORM */
+label{font-size:13px;opacity:.7}
 input,button{
   width:100%;
-  padding:14px;
-  border-radius:12px;
+  padding:16px;
+  border-radius:16px;
   border:none;
-  margin-bottom:10px;
-  font-size:15px;
+  font-size:16px;
+  margin-top:8px;
+  margin-bottom:14px;
 }
-
+input{background:#fff;color:#000}
 button{
   background:#2563eb;
   color:#fff;
@@ -61,19 +66,15 @@ button{
 
 .hidden{display:none}
 
-.section-title{
-  font-size:15px;
-  margin:22px 0 10px;
-  opacity:.85;
-}
+/* LISTINGS */
+.section-title{font-size:16px;margin:22px 0 10px;opacity:.85}
 
 .listing{
   background:rgba(255,255,255,.06);
-  border-radius:14px;
+  border-radius:16px;
   padding:14px;
   margin-bottom:14px;
 }
-
 .listing strong{display:block;font-size:15px}
 .listing p{font-size:13px;opacity:.8;margin:6px 0}
 
@@ -84,18 +85,15 @@ button{
   font-size:11px;
   margin-right:6px;
 }
-
 .available{background:#166534}
-.rented{background:#7f1d1d}
 .saved{background:#1e40af}
 
 .save-btn{margin-top:8px;background:#334155}
-.disabled{opacity:.45;pointer-events:none}
 
 /* CHAT */
 .chat-box{
   background:#020617;
-  border-radius:14px;
+  border-radius:16px;
   padding:12px;
   height:180px;
   overflow-y:auto;
@@ -112,7 +110,7 @@ button{
 .contact a{
   display:block;
   padding:14px;
-  border-radius:14px;
+  border-radius:16px;
   text-align:center;
   color:#fff;
   font-weight:600;
@@ -123,7 +121,12 @@ button{
 .email{background:#0f766e}
 .phone{background:#166534}
 
-.footer{text-align:center;font-size:12px;opacity:.55;margin-top:16px}
+.footer{
+  text-align:center;
+  font-size:12px;
+  opacity:.55;
+  margin-top:18px;
+}
 </style>
 </head>
 
@@ -131,66 +134,51 @@ button{
 
 <div class="app">
 
-<!-- LOGIN -->
-<div class="card" id="loginCard">
-  <h2>Private Client Access</h2>
-  <input placeholder="Email or Phone Number">
-  <button onclick="start()">Continue</button>
-</div>
+<!-- AUTH -->
+<div class="card" id="authCard">
+  <h1>Capital Crest Housing</h1>
+  <div class="subtitle">Client Access Portal</div>
 
-<!-- VERIFY -->
-<div class="card hidden" id="verifyCard">
-  <h2>Verification</h2>
   <div class="notice">
-    <strong id="demoCode"></strong>
-    <span>Demo verification code</span>
+    <strong>$100 Inspection & Referral Fee</strong>
+    <span>70% refundable if no suitable apartment is found</span>
   </div>
-  <input id="otp" placeholder="Enter code">
-  <button onclick="verify()">Verify & Enter</button>
+
+  <label>Email or Phone</label>
+  <input id="email" placeholder="Email or phone number">
+
+  <label>Password</label>
+  <input id="password" type="password" placeholder="Password">
+
+  <button onclick="login()">Log In / Sign Up</button>
+
+  <div class="footer">Login required to continue</div>
 </div>
 
 <!-- DASHBOARD -->
 <div class="card hidden" id="dashboard">
+  <h2>Available Apartments</h2>
+  <div class="subtitle">Verified listings · Updated daily</div>
 
-  <h1>Capital Crest Housing</h1>
-  <div class="subtitle">Verified Listings · Private Access</div>
-
-  <!-- PAYMENT NOTICE -->
-  <div class="notice">
-    <strong>$100 Inspection & Referral Fee</strong>
-    <span>
-      70% refundable if no suitable apartment is found after inspection.<br>
-      Fee confirms serious interest and secures verified viewings.
-    </span>
-  </div>
-
-  <div class="section-title">Apartment Listings</div>
   <div id="listings"></div>
 
   <div class="section-title">Saved Listings</div>
-  <div id="saved">
-    <p style="opacity:.6">No saved listings yet.</p>
-  </div>
+  <div id="saved"><p style="opacity:.6;font-size:13px">No saved listings yet.</p></div>
 
-  <div class="section-title">Customer Care / Support</div>
+  <div class="section-title">Customer Support</div>
   <div class="chat-box" id="chat">
-    <div class="chat-msg"><em>Support:</em> Hello 👋 How can we assist you?</div>
+    <div class="chat-msg"><em>Support:</em> Hello 👋 How can we help you today?</div>
   </div>
   <div class="chat-input">
     <input id="chatInput" placeholder="Type your message">
     <button onclick="send()">Send</button>
   </div>
 
-  <!-- CONTACT INFO -->
   <div class="section-title">Contact Information</div>
   <div class="contact">
-    <a class="telegram" href="https://t.me/SSG_011">Chat via Telegram</a>
-    <a class="email" href="mailto:Confidentialuseonly6@gmail.com">
-      Confidentialuseonly6@gmail.com
-    </a>
-    <a class="phone" href="tel:+13476103825">
-      +1 (347) 610-3825
-    </a>
+    <a class="telegram" href="https://t.me/SSG_011">Telegram Support</a>
+    <a class="email" href="mailto:Confidentialuseonly6@gmail.com">Email Support</a>
+    <a class="phone" href="tel:+13476103825">Call Support</a>
   </div>
 
   <div class="footer">Capital Crest Housing · Secure Client Portal</div>
@@ -199,58 +187,41 @@ button{
 </div>
 
 <script>
-let code="";
-
-function start(){
-  code=Math.floor(100000+Math.random()*900000).toString();
-  demoCode.textContent=code;
-  loginCard.classList.add("hidden");
-  verifyCard.classList.remove("hidden");
-}
-
-function verify(){
-  if(otp.value===code){
-    verifyCard.classList.add("hidden");
-    dashboard.classList.remove("hidden");
-    loadListings();
-  } else alert("Invalid code");
+function login(){
+  if(!email.value || !password.value){
+    alert("Please enter your login details");
+    return;
+  }
+  authCard.classList.add("hidden");
+  dashboard.classList.remove("hidden");
+  loadListings();
 }
 
 function loadListings(){
-  const areas=["Bowie","Largo","Suitland","Kettering","Capitol Heights","Upper Marlboro"];
-  const list=document.getElementById("listings");
-  list.innerHTML="";
-  for(let i=1;i<=40;i++){
-    const rented=i%6===0;
-    list.innerHTML+=`
+  const areas=["Bowie","Largo","Suitland","Capitol Heights","Upper Marlboro"];
+  for(let i=1;i<=12;i++){
+    listings.innerHTML+=`
     <div class="listing">
       <strong>${i%3+1} Bedroom – ${areas[i%areas.length]}</strong>
-      <p>Verified unit · Quiet area · Inspection available</p>
-      <span class="badge ${rented?"rented":"available"}">
-        ${rented?"Rented":"Available"}
-      </span>
-      <span class="badge">$${1200+i*20}–$${1400+i*25}</span>
-      ${
-        rented
-        ?'<button class="save-btn disabled">Unavailable</button>'
-        :'<button class="save-btn" onclick="save(this)">Save Listing</button>'
-      }
+      <p>Clean unit · Safe neighborhood · Verified</p>
+      <span class="badge available">Available</span>
+      <span class="badge">$${1100+i*40}</span>
+      <button class="save-btn" onclick="save(this)">Save Listing</button>
     </div>`;
   }
 }
 
 function save(btn){
-  const clone=btn.closest(".listing").cloneNode(true);
-  clone.querySelector("button").remove();
-  clone.innerHTML+=`<span class="badge saved">Saved</span>`;
+  const card=btn.closest(".listing").cloneNode(true);
+  card.querySelector("button").remove();
+  card.innerHTML+=`<span class="badge saved">Saved</span>`;
   if(saved.querySelector("p")) saved.innerHTML="";
-  saved.appendChild(clone);
+  saved.appendChild(card);
 }
 
 function send(){
   if(!chatInput.value) return;
-  chat.innerHTML+=
-    `<div class="chat-msg"><span class="user">You:</span> ${chatInput.value}</div>`;
+  chat.innerHTML+=`<div class="chat-msg"><span class="user">You:</span> ${chatInput.value}</div>`;
   chatInput.value="";
 }
 </script>
