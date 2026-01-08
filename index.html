@@ -11,29 +11,31 @@
 html,body{
   margin:0;
   padding:0;
+  height:100%;
   background:#020617;
   font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto;
   color:#fff;
 }
 
+/* APP */
 .app{
   min-height:100vh;
-  padding:20px;
+  padding:18px;
   background:linear-gradient(180deg,#0f172a,#020617);
 }
 
 /* CARD */
 .card{
   max-width:440px;
-  margin:0 auto 20px;
+  margin:0 auto 18px;
   background:#020617;
-  border-radius:24px;
-  padding:22px;
+  border-radius:22px;
+  padding:20px;
   box-shadow:0 25px 80px rgba(0,0,0,.85);
 }
 
 h1,h2{text-align:center;margin:0}
-.subtitle{text-align:center;font-size:14px;opacity:.75;margin:6px 0 16px}
+.subtitle{text-align:center;font-size:14px;opacity:.75;margin:8px 0 16px}
 
 /* NOTICE */
 .notice{
@@ -66,14 +68,28 @@ button{
 
 .hidden{display:none}
 
-/* LISTINGS */
-.section-title{font-size:16px;margin:22px 0 10px;opacity:.85}
+/* DASHBOARD */
+.dashboard{
+  display:flex;
+  flex-direction:column;
+  gap:18px;
+}
 
-.listing{
-  background:rgba(255,255,255,.06);
-  border-radius:16px;
+/* SCROLLABLE LISTINGS */
+.listings-box{
+  background:rgba(255,255,255,.05);
+  border-radius:18px;
   padding:14px;
-  margin-bottom:14px;
+  max-height:300px;
+  overflow-y:auto;
+}
+
+/* LISTING */
+.listing{
+  background:rgba(255,255,255,.08);
+  border-radius:14px;
+  padding:14px;
+  margin-bottom:12px;
 }
 .listing strong{display:block;font-size:15px}
 .listing p{font-size:13px;opacity:.8;margin:6px 0}
@@ -95,16 +111,20 @@ button{
   background:#020617;
   border-radius:16px;
   padding:12px;
-  height:180px;
+  height:150px;
   overflow-y:auto;
   font-size:13px;
 }
 .chat-msg{margin-bottom:8px}
 .user{font-weight:600}
 
-.chat-input{display:flex;margin-top:10px}
+.chat-input{
+  display:flex;
+  gap:8px;
+  margin-top:10px;
+}
 .chat-input input{flex:1;margin:0}
-.chat-input button{width:auto;margin-left:8px}
+.chat-input button{width:auto}
 
 /* CONTACT */
 .contact a{
@@ -125,7 +145,7 @@ button{
   text-align:center;
   font-size:12px;
   opacity:.55;
-  margin-top:18px;
+  margin-top:12px;
 }
 </style>
 </head>
@@ -134,8 +154,8 @@ button{
 
 <div class="app">
 
-<!-- AUTH -->
-<div class="card" id="authCard">
+<!-- LOGIN -->
+<div class="card" id="loginCard">
   <h1>Capital Crest Housing</h1>
   <div class="subtitle">Client Access Portal</div>
 
@@ -156,32 +176,48 @@ button{
 </div>
 
 <!-- DASHBOARD -->
-<div class="card hidden" id="dashboard">
-  <h2>Available Apartments</h2>
-  <div class="subtitle">Verified listings · Updated daily</div>
+<div class="card hidden" id="dashboardCard">
+  <div class="dashboard">
 
-  <div id="listings"></div>
+    <div>
+      <h2>Available Apartments</h2>
+      <div class="subtitle">Scroll to view listings</div>
+    </div>
 
-  <div class="section-title">Saved Listings</div>
-  <div id="saved"><p style="opacity:.6;font-size:13px">No saved listings yet.</p></div>
+    <!-- LISTINGS -->
+    <div class="listings-box" id="listings"></div>
 
-  <div class="section-title">Customer Support</div>
-  <div class="chat-box" id="chat">
-    <div class="chat-msg"><em>Support:</em> Hello 👋 How can we help you today?</div>
+    <!-- SAVED -->
+    <div>
+      <h3>Saved Listings</h3>
+      <div id="saved"><p style="opacity:.6;font-size:13px">No saved listings yet.</p></div>
+    </div>
+
+    <!-- CHAT -->
+    <div>
+      <h3>Customer Support</h3>
+      <div class="chat-box" id="chat">
+        <div class="chat-msg"><em>Support:</em> Hello 👋 How can we assist you?</div>
+      </div>
+      <div class="chat-input">
+        <input id="chatInput" placeholder="Type your message">
+        <button onclick="send()">Send</button>
+      </div>
+    </div>
+
+    <!-- CONTACT -->
+    <div>
+      <h3>Contact Information</h3>
+      <div class="contact">
+        <a class="telegram" href="https://t.me/SSG_011">Telegram Support</a>
+        <a class="email" href="mailto:Confidentialuseonly6@gmail.com">Email Support</a>
+        <a class="phone" href="tel:+13476103825">Call Support</a>
+      </div>
+    </div>
+
+    <div class="footer">Capital Crest Housing · Secure Client Portal</div>
+
   </div>
-  <div class="chat-input">
-    <input id="chatInput" placeholder="Type your message">
-    <button onclick="send()">Send</button>
-  </div>
-
-  <div class="section-title">Contact Information</div>
-  <div class="contact">
-    <a class="telegram" href="https://t.me/SSG_011">Telegram Support</a>
-    <a class="email" href="mailto:Confidentialuseonly6@gmail.com">Email Support</a>
-    <a class="phone" href="tel:+13476103825">Call Support</a>
-  </div>
-
-  <div class="footer">Capital Crest Housing · Secure Client Portal</div>
 </div>
 
 </div>
@@ -192,20 +228,21 @@ function login(){
     alert("Please enter your login details");
     return;
   }
-  authCard.classList.add("hidden");
-  dashboard.classList.remove("hidden");
+  loginCard.classList.add("hidden");
+  dashboardCard.classList.remove("hidden");
   loadListings();
 }
 
 function loadListings(){
   const areas=["Bowie","Largo","Suitland","Capitol Heights","Upper Marlboro"];
-  for(let i=1;i<=12;i++){
+  listings.innerHTML="";
+  for(let i=1;i<=15;i++){
     listings.innerHTML+=`
     <div class="listing">
       <strong>${i%3+1} Bedroom – ${areas[i%areas.length]}</strong>
       <p>Clean unit · Safe neighborhood · Verified</p>
       <span class="badge available">Available</span>
-      <span class="badge">$${1100+i*40}</span>
+      <span class="badge">$${1100+i*35}</span>
       <button class="save-btn" onclick="save(this)">Save Listing</button>
     </div>`;
   }
