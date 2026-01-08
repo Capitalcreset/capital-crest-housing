@@ -5,56 +5,53 @@
 <title>Capital Crest Housing</title>
 
 <meta name="viewport"
-content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
 
 <style>
+*{box-sizing:border-box}
 html,body{
   margin:0;
   padding:0;
-  width:100%;
-  height:100%;
   background:#020617;
   font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto;
 }
 
 .app{
-  width:100vw;
-  height:100vh;
-  overflow-y:auto;
+  min-height:100vh;
   padding:16px;
-  background:radial-gradient(circle at top,#0f172a,#020617);
+  background:linear-gradient(180deg,#0f172a,#020617);
 }
 
 .card{
   max-width:430px;
   margin:0 auto 20px;
-  background:rgba(2,6,23,.96);
-  border-radius:18px;
-  padding:22px;
-  box-shadow:0 30px 80px rgba(0,0,0,.8);
+  background:#020617;
+  border-radius:20px;
+  padding:20px;
   color:#fff;
+  box-shadow:0 25px 70px rgba(0,0,0,.9);
 }
 
-h1{text-align:center;font-size:22px;margin-top:0}
-.subtitle{text-align:center;font-size:14px;opacity:.85;margin-bottom:16px}
+h1{text-align:center;font-size:22px;margin:0}
+.subtitle{text-align:center;font-size:13px;opacity:.8;margin:8px 0 16px}
 
 .notice{
   background:linear-gradient(135deg,#1d4ed8,#2563eb);
   border-radius:14px;
   padding:14px;
   text-align:center;
-  margin-bottom:20px;
+  margin-bottom:18px;
 }
 .notice strong{font-size:18px;display:block}
-.notice span{font-size:13px}
+.notice span{font-size:12px}
 
 input,button{
   width:100%;
   padding:14px;
   border-radius:12px;
   border:none;
-  font-size:15px;
   margin-bottom:10px;
+  font-size:15px;
 }
 
 button{
@@ -66,9 +63,9 @@ button{
 .hidden{display:none}
 
 .section-title{
+  font-size:15px;
   margin:18px 0 10px;
-  font-size:16px;
-  opacity:.9;
+  opacity:.85;
 }
 
 .listing{
@@ -78,15 +75,10 @@ button{
   margin-bottom:14px;
 }
 
-.listing strong{display:block}
+.listing strong{display:block;font-size:15px}
+.listing p{font-size:13px;opacity:.8;margin:6px 0}
 
-.listing p{
-  font-size:13px;
-  opacity:.85;
-  margin:6px 0;
-}
-
-.tag{
+.badge{
   display:inline-block;
   padding:4px 8px;
   border-radius:8px;
@@ -94,16 +86,16 @@ button{
   margin-right:6px;
 }
 
-.vacant{background:#166534}
+.available{background:#166534}
 .rented{background:#7f1d1d}
 
-.save{
+.save-btn{
   margin-top:8px;
   background:#334155;
 }
 
 .disabled{
-  opacity:.5;
+  opacity:.45;
   pointer-events:none;
 }
 
@@ -114,15 +106,15 @@ button{
   text-align:center;
   color:#fff;
   font-weight:600;
-  margin-top:10px;
   text-decoration:none;
+  margin-top:10px;
 }
 
 .telegram{background:#229ED9}
 .email{background:#0f766e}
 .phone{background:#166534}
 
-.footer{text-align:center;font-size:12px;opacity:.6;margin:16px 0}
+.footer{text-align:center;font-size:12px;opacity:.55;margin-top:16px}
 </style>
 </head>
 
@@ -133,7 +125,7 @@ button{
 <!-- LOGIN -->
 <div class="card" id="login">
   <h1>Capital Crest Housing</h1>
-  <div class="subtitle">Secure Client Access Portal</div>
+  <div class="subtitle">Private Client Access</div>
 
   <div class="notice">
     <strong>$100 Inspection & Referral Fee</strong>
@@ -142,86 +134,100 @@ button{
 
   <input placeholder="Email or phone number">
   <input type="password" placeholder="Password">
-  <button onclick="enter()">Log In / Sign Up</button>
+  <button onclick="login()">Log In / Sign Up</button>
 </div>
 
 <!-- DASHBOARD -->
-<div class="card hidden" id="dash">
-  <h1>Available Apartments</h1>
-  <div class="subtitle">Scroll to explore available options</div>
+<div class="card hidden" id="dashboard">
 
-  <div class="section-title">Listings</div>
+  <h1>Apartment Listings</h1>
+  <div class="subtitle">Scroll to explore availability</div>
+
+  <div class="section-title">Available & Recently Rented</div>
   <div id="listings">
 
-    <div class="listing">
+    <!-- AVAILABLE -->
+    <div class="listing available">
       <strong>1 Bedroom – Upper Marlboro</strong>
-      <p>Quiet area, updated unit, near shopping.</p>
-      <span class="tag vacant">Vacant</span>
-      <span class="tag">$1,350–$1,500</span>
-      <button class="save" onclick="saveListing(this)">Save Listing</button>
+      <p>Modern unit, quiet neighborhood.</p>
+      <span class="badge available">Available</span>
+      <span class="badge">$1,350–$1,500</span>
+      <button class="save-btn" onclick="save(this)">Save Listing</button>
     </div>
 
-    <div class="listing">
+    <div class="listing available">
       <strong>Studio – Kettering</strong>
       <p>Secure building, parking included.</p>
-      <span class="tag vacant">Vacant</span>
-      <span class="tag">$1,100–$1,250</span>
-      <button class="save" onclick="saveListing(this)">Save Listing</button>
+      <span class="badge available">Available</span>
+      <span class="badge">$1,100–$1,250</span>
+      <button class="save-btn" onclick="save(this)">Save Listing</button>
     </div>
 
-    <div class="listing">
+    <!-- RENTED -->
+    <div class="listing rented">
       <strong>2 Bedroom – Largo</strong>
       <p>Family-friendly, pet friendly.</p>
-      <span class="tag rented">Rented</span>
-      <span class="tag">$1,750–$1,950</span>
-      <button class="save disabled">Unavailable</button>
+      <span class="badge rented">Rented</span>
+      <span class="badge">$1,750–$1,950</span>
+      <button class="save-btn disabled">Unavailable</button>
     </div>
 
-    <div class="listing">
+    <div class="listing available">
       <strong>Private Room – Shared Home</strong>
       <p>Furnished, utilities included.</p>
-      <span class="tag vacant">Vacant</span>
-      <span class="tag">$850–$950</span>
-      <button class="save" onclick="saveListing(this)">Save Listing</button>
+      <span class="badge available">Available</span>
+      <span class="badge">$850–$950</span>
+      <button class="save-btn" onclick="save(this)">Save Listing</button>
     </div>
 
-    <div class="listing">
-      <strong>Basement Apartment</strong>
-      <p>Private entrance, renovated.</p>
-      <span class="tag vacant">Vacant</span>
-      <span class="tag">$1,000–$1,200</span>
-      <button class="save" onclick="saveListing(this)">Save Listing</button>
+    <div class="listing rented">
+      <strong>Basement Apartment – Bowie</strong>
+      <p>Private entrance, newly leased.</p>
+      <span class="badge rented">Rented</span>
+      <span class="badge">$1,000–$1,200</span>
+      <button class="save-btn disabled">Unavailable</button>
+    </div>
+
+    <div class="listing available">
+      <strong>1 Bedroom – Capitol Heights</strong>
+      <p>Near transit, renovated kitchen.</p>
+      <span class="badge available">Available</span>
+      <span class="badge">$1,400–$1,550</span>
+      <button class="save-btn" onclick="save(this)">Save Listing</button>
     </div>
 
   </div>
 
   <div class="section-title">Saved Listings</div>
   <div id="saved">
-    <p style="font-size:13px;opacity:.7;">No saved listings yet.</p>
+    <p style="font-size:13px;opacity:.6">No saved listings yet.</p>
   </div>
 
-  <div class="section-title">Direct Contact</div>
+  <div class="section-title">Contact</div>
   <div class="contact">
     <a class="telegram" href="https://t.me/SSG_011">Telegram</a>
     <a class="email" href="mailto:Confidentialuseonly6@gmail.com">Email</a>
     <a class="phone" href="tel:+13476103825">Call</a>
   </div>
 
-  <div class="footer">Capital Crest Housing · Private Access</div>
+  <div class="footer">Capital Crest Housing · Secure Access</div>
 </div>
 
 </div>
 
 <script>
-function enter(){
+function login(){
   document.getElementById("login").classList.add("hidden");
-  document.getElementById("dash").classList.remove("hidden");
+  document.getElementById("dashboard").classList.remove("hidden");
 }
 
-function saveListing(btn){
-  const listing = btn.parentElement;
-  btn.remove();
-  document.getElementById("saved").appendChild(listing);
+function save(button){
+  const listing = button.closest(".listing");
+  button.remove();
+  const saved = document.getElementById("saved");
+
+  if(saved.children[0]?.tagName==="P") saved.innerHTML="";
+  saved.appendChild(listing);
 }
 </script>
 
