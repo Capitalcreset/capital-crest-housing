@@ -7,24 +7,20 @@
 
 <style>
 *{box-sizing:border-box}
-
 html,body{
   margin:0;
   padding:0;
-  height:100%;
   background:#020617;
   font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto;
   color:#fff;
 }
 
-/* APP */
 .app{
   min-height:100vh;
   padding:18px;
   background:linear-gradient(180deg,#0f172a,#020617);
 }
 
-/* CARD */
 .card{
   max-width:440px;
   margin:0 auto 18px;
@@ -34,10 +30,9 @@ html,body{
   box-shadow:0 25px 80px rgba(0,0,0,.85);
 }
 
-h1,h2{text-align:center;margin:0}
+h1,h2,h3{text-align:center;margin:0}
 .subtitle{text-align:center;font-size:14px;opacity:.75;margin:8px 0 16px}
 
-/* NOTICE */
 .notice{
   background:#2563eb;
   border-radius:18px;
@@ -48,51 +43,42 @@ h1,h2{text-align:center;margin:0}
 .notice strong{display:block;font-size:18px}
 .notice span{font-size:13px}
 
-/* FORM */
-label{font-size:13px;opacity:.7}
 input,button{
   width:100%;
   padding:16px;
   border-radius:16px;
   border:none;
   font-size:16px;
-  margin-top:8px;
   margin-bottom:14px;
 }
-input{background:#fff;color:#000}
+input{color:#000}
+
 button{
   background:#2563eb;
   color:#fff;
   font-weight:600;
 }
 
+.secondary{background:#334155}
 .hidden{display:none}
 
-/* DASHBOARD */
-.dashboard{
-  display:flex;
-  flex-direction:column;
-  gap:18px;
-}
-
-/* SCROLLABLE LISTINGS */
+/* LISTINGS */
 .listings-box{
-  background:rgba(255,255,255,.05);
-  border-radius:18px;
-  padding:14px;
-  max-height:300px;
+  max-height:280px;
   overflow-y:auto;
+  background:rgba(255,255,255,.05);
+  padding:12px;
+  border-radius:18px;
 }
 
-/* LISTING */
 .listing{
   background:rgba(255,255,255,.08);
   border-radius:14px;
   padding:14px;
   margin-bottom:12px;
 }
-.listing strong{display:block;font-size:15px}
-.listing p{font-size:13px;opacity:.8;margin:6px 0}
+.listing strong{display:block}
+.listing p{font-size:13px;opacity:.8}
 
 .badge{
   display:inline-block;
@@ -104,27 +90,21 @@ button{
 .available{background:#166534}
 .saved{background:#1e40af}
 
-.save-btn{margin-top:8px;background:#334155}
-
 /* CHAT */
 .chat-box{
-  background:#020617;
-  border-radius:16px;
-  padding:12px;
   height:150px;
   overflow-y:auto;
+  background:#020617;
+  padding:12px;
+  border-radius:16px;
   font-size:13px;
 }
-.chat-msg{margin-bottom:8px}
-.user{font-weight:600}
-
 .chat-input{
   display:flex;
   gap:8px;
-  margin-top:10px;
+  margin-top:8px;
 }
 .chat-input input{flex:1;margin:0}
-.chat-input button{width:auto}
 
 /* CONTACT */
 .contact a{
@@ -141,21 +121,32 @@ button{
 .email{background:#0f766e}
 .phone{background:#166534}
 
-.footer{
-  text-align:center;
-  font-size:12px;
-  opacity:.55;
-  margin-top:12px;
+/* MODAL */
+.modal{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.8);
+  display:flex;
+  align-items:center;
+  justify-content:center;
 }
+.modal-box{
+  background:#020617;
+  padding:20px;
+  border-radius:20px;
+  max-width:400px;
+  text-align:center;
+}
+.modal-box p{font-size:14px;opacity:.85}
+.footer{text-align:center;font-size:12px;opacity:.55;margin-top:12px}
 </style>
 </head>
 
 <body>
-
 <div class="app">
 
-<!-- LOGIN -->
-<div class="card" id="loginCard">
+<!-- AUTH -->
+<div class="card" id="authCard">
   <h1>Capital Crest Housing</h1>
   <div class="subtitle">Client Access Portal</div>
 
@@ -164,101 +155,148 @@ button{
     <span>70% refundable if no suitable apartment is found</span>
   </div>
 
-  <label>Email or Phone</label>
-  <input id="email" placeholder="Email or phone number">
-
-  <label>Password</label>
+  <input id="email" type="email" placeholder="Email">
   <input id="password" type="password" placeholder="Password">
 
-  <button onclick="login()">Log In / Sign Up</button>
+  <button onclick="signup()">Sign Up</button>
+  <button onclick="login()">Login</button>
 
-  <div class="footer">Login required to continue</div>
+  <p id="authMsg" style="text-align:center;font-size:13px"></p>
 </div>
 
 <!-- DASHBOARD -->
-<div class="card hidden" id="dashboardCard">
-  <div class="dashboard">
+<div class="card hidden" id="dashboard">
+  <h2>Available Apartments</h2>
+  <div class="subtitle">Verified listings · Scroll to view</div>
 
-    <div>
-      <h2>Available Apartments</h2>
-      <div class="subtitle">Scroll to view listings</div>
-    </div>
+  <div class="listings-box" id="listings"></div>
 
-    <!-- LISTINGS -->
-    <div class="listings-box" id="listings"></div>
+  <h3>Saved Listings</h3>
+  <div id="saved"><p style="opacity:.6">No saved listings yet.</p></div>
 
-    <!-- SAVED -->
-    <div>
-      <h3>Saved Listings</h3>
-      <div id="saved"><p style="opacity:.6;font-size:13px">No saved listings yet.</p></div>
-    </div>
+  <h3>Support Chat</h3>
+  <div class="chat-box" id="chat">
+    <div><em>Support:</em> Hello 👋 How can we help?</div>
+  </div>
+  <div class="chat-input">
+    <input id="chatInput" placeholder="Message">
+    <button onclick="send()">Send</button>
+  </div>
 
-    <!-- CHAT -->
-    <div>
-      <h3>Customer Support</h3>
-      <div class="chat-box" id="chat">
-        <div class="chat-msg"><em>Support:</em> Hello 👋 How can we assist you?</div>
-      </div>
-      <div class="chat-input">
-        <input id="chatInput" placeholder="Type your message">
-        <button onclick="send()">Send</button>
-      </div>
-    </div>
+  <h3>Contact</h3>
+  <div class="contact">
+    <a class="telegram" href="https://t.me/SSG_011">Telegram</a>
+    <a class="email" href="mailto:Confidentialuseonly6@gmail.com">Email</a>
+    <a class="phone" href="tel:+13476103825">Call</a>
+  </div>
 
-    <!-- CONTACT -->
-    <div>
-      <h3>Contact Information</h3>
-      <div class="contact">
-        <a class="telegram" href="https://t.me/SSG_011">Telegram Support</a>
-        <a class="email" href="mailto:Confidentialuseonly6@gmail.com">Email Support</a>
-        <a class="phone" href="tel:+13476103825">Call Support</a>
-      </div>
-    </div>
+  <button class="secondary" onclick="logout()">Logout</button>
 
-    <div class="footer">Capital Crest Housing · Secure Client Portal</div>
+  <div class="footer">Capital Crest Housing · Secure Portal</div>
+</div>
 
+<!-- TERMS MODAL -->
+<div class="modal hidden" id="termsModal">
+  <div class="modal-box">
+    <h3>Inspection Fee Agreement</h3>
+    <p>
+      A $100 inspection & referral fee is required.
+      <br><br>
+      70% is refundable if no suitable apartment is found.
+    </p>
+    <button onclick="acceptTerms()">I Agree</button>
   </div>
 </div>
 
 </div>
 
+<!-- FIREBASE -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  sendEmailVerification,
+  signOut
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+/* 🔴 REPLACE WITH YOUR REAL CONFIG */
+const firebaseConfig = {
+  apiKey: "PASTE_API_KEY",
+  authDomain: "capital-creset-housing.firebaseapp.com",
+  projectId: "capital-creset-housing",
+  storageBucket: "capital-creset-housing.appspot.com",
+  messagingSenderId: "203155522222",
+  appId: "PASTE_APP_ID"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+
+window.signup = () => {
+  authMsg.textContent="Creating account...";
+  createUserWithEmailAndPassword(auth,email.value,password.value)
+    .then(({user})=>{
+      sendEmailVerification(user);
+      authMsg.textContent="Signup successful ✅ Check your email to verify";
+    })
+    .catch(e=>authMsg.textContent=e.message);
+};
+
+window.login = () => {
+  signInWithEmailAndPassword(auth,email.value,password.value)
+    .then(({user})=>{
+      if(!user.emailVerified){
+        authMsg.textContent="Please verify your email first";
+        return;
+      }
+      authCard.classList.add("hidden");
+      termsModal.classList.remove("hidden");
+    })
+    .catch(e=>authMsg.textContent=e.message);
+};
+
+window.logout = ()=>{
+  signOut(auth).then(()=>{
+    location.reload();
+  });
+};
+</script>
+
 <script>
-function login(){
-  if(!email.value || !password.value){
-    alert("Please enter your login details");
-    return;
-  }
-  loginCard.classList.add("hidden");
-  dashboardCard.classList.remove("hidden");
+function acceptTerms(){
+  termsModal.classList.add("hidden");
+  dashboard.classList.remove("hidden");
   loadListings();
 }
 
 function loadListings(){
   const areas=["Bowie","Largo","Suitland","Capitol Heights","Upper Marlboro"];
   listings.innerHTML="";
-  for(let i=1;i<=15;i++){
+  for(let i=1;i<=18;i++){
     listings.innerHTML+=`
     <div class="listing">
       <strong>${i%3+1} Bedroom – ${areas[i%areas.length]}</strong>
-      <p>Clean unit · Safe neighborhood · Verified</p>
+      <p>Clean unit · Verified · Safe neighborhood</p>
       <span class="badge available">Available</span>
-      <span class="badge">$${1100+i*35}</span>
-      <button class="save-btn" onclick="save(this)">Save Listing</button>
+      <span class="badge">$${1150+i*40}</span>
+      <button onclick="save(this)">Save Listing</button>
     </div>`;
   }
 }
 
 function save(btn){
-  const card=btn.closest(".listing").cloneNode(true);
-  card.querySelector("button").remove();
-  card.innerHTML+=`<span class="badge saved">Saved</span>`;
+  const clone=btn.closest(".listing").cloneNode(true);
+  clone.querySelector("button").remove();
+  clone.innerHTML+=`<span class="badge saved">Saved</span>`;
   if(saved.querySelector("p")) saved.innerHTML="";
-  saved.appendChild(card);
+  saved.appendChild(clone);
 }
 
 function send(){
   if(!chatInput.value) return;
-  chat.innerHTML+=`<div class="chat-msg"><span class="user">You:</span> ${chatInput.value}</div>`;
+  chat.innerHTML+=`<div><b>You:</b> ${chatInput.value}</div>`;
   chatInput.value="";
 }
 </script>
