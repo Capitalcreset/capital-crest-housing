@@ -1,85 +1,224 @@
-<!-- LOGIN / SIGN UP GATE -->
-<div id="authGate" style="
-  position:fixed;
-  inset:0;
-  background:#0f172a;
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Capital Crest Housing</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+
+<style>
+*{box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto}
+body{
+  margin:0;
+  min-height:100vh;
+  background:radial-gradient(circle at top,#0f172a,#020617);
   display:flex;
   align-items:center;
   justify-content:center;
-  z-index:9999;
-  color:white;
-  font-family:Arial, sans-serif;
-">
+  color:#fff;
+}
+.hidden{display:none}
 
-  <div style="
-    background:#020617;
-    padding:32px;
-    border-radius:14px;
-    width:100%;
-    max-width:420px;
-    box-shadow:0 20px 50px rgba(0,0,0,.6);
-  ">
+.container{width:100%;max-width:430px;padding:18px}
 
-    <h2 style="margin-bottom:10px;">Client Access Portal</h2>
-    <p style="font-size:14px;opacity:.85;margin-bottom:20px;">
-      Please log in or create an account to view available apartments
-      and communicate securely.
-    </p>
+.card{
+  background:rgba(2,6,23,.95);
+  border-radius:16px;
+  padding:22px;
+  box-shadow:0 20px 60px rgba(0,0,0,.7);
+}
 
-    <input type="email" placeholder="Email address" required
-      style="width:100%;padding:12px;border-radius:8px;border:none;margin-bottom:10px;">
+h1{text-align:center;margin:0 0 6px;font-size:22px}
+.subtitle{text-align:center;font-size:14px;opacity:.85;margin-bottom:18px}
 
-    <input type="password" placeholder="Password" required
-      style="width:100%;padding:12px;border-radius:8px;border:none;margin-bottom:16px;">
+.notice{
+  background:linear-gradient(135deg,#1d4ed8,#2563eb);
+  border-radius:12px;
+  padding:14px;
+  text-align:center;
+  margin-bottom:18px;
+}
+.notice strong{font-size:18px;display:block}
+.notice span{font-size:13px;opacity:.95}
 
-    <button onclick="unlockSite()" style="
-      width:100%;
-      padding:12px;
-      background:#2563eb;
-      border:none;
-      border-radius:8px;
-      color:white;
-      font-weight:600;
-      cursor:pointer;
-    ">
-      Log In / Sign Up
-    </button>
+label{font-size:13px;opacity:.8}
+input{
+  width:100%;
+  padding:14px;
+  border-radius:10px;
+  border:none;
+  margin:6px 0 14px;
+  font-size:15px;
+}
 
-    <div style="margin-top:18px;font-size:13px;line-height:1.6;opacity:.85;">
-      <strong>Inspection & Referral Fee:</strong><br>
-      A <strong>$100</strong> client onboarding fee is required before
-      inspections or agent referrals are scheduled.
-      <br><br>
-      If no suitable option is found during the inspection process,
-      <strong>70% of the $100 fee is refundable</strong>.
-    </div>
+button{
+  width:100%;
+  padding:14px;
+  border:none;
+  border-radius:12px;
+  background:#2563eb;
+  color:#fff;
+  font-size:16px;
+  font-weight:600;
+  cursor:pointer;
+}
 
+.secondary{
+  background:#0f766e;
+  margin-top:10px;
+}
+
+.divider{
+  height:1px;
+  background:rgba(255,255,255,.1);
+  margin:20px 0;
+}
+
+.listing{
+  background:rgba(255,255,255,.04);
+  padding:14px;
+  border-radius:12px;
+  margin-bottom:12px;
+}
+
+.listing strong{display:block;margin-bottom:6px}
+
+.chat-box{
+  background:#020617;
+  border-radius:12px;
+  padding:12px;
+  height:160px;
+  overflow-y:auto;
+  font-size:14px;
+}
+
+.chat-input{
+  display:flex;
+  margin-top:10px;
+}
+
+.chat-input input{
+  flex:1;
+  margin:0;
+}
+
+.chat-input button{
+  width:auto;
+  margin-left:8px;
+  padding:14px 16px;
+}
+
+.contact a{
+  display:block;
+  text-align:center;
+  padding:12px;
+  border-radius:10px;
+  margin-top:10px;
+  color:#fff;
+  text-decoration:none;
+  font-weight:600;
+}
+
+.telegram{background:#229ED9}
+.email{background:#0f766e}
+.phone{background:#166534}
+
+.footer{text-align:center;font-size:12px;opacity:.7;margin-top:14px}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<!-- LOGIN SCREEN -->
+<div class="card" id="loginCard">
+  <h1>Capital Crest Housing</h1>
+  <div class="subtitle">Secure Client Access Portal</div>
+
+  <div class="notice">
+    <strong>$100 Inspection & Referral Fee</strong>
+    <span>70% refundable if no suitable apartment is found</span>
   </div>
+
+  <label>Email or Phone</label>
+  <input id="userInput" placeholder="Email or phone number">
+
+  <label>Password</label>
+  <input type="password" placeholder="Password">
+
+  <button onclick="login()">Log In / Sign Up</button>
+
+  <div class="footer">Login required to view listings & chat</div>
 </div>
 
-<!-- SCRIPT TO UNLOCK SITE -->
-<script>
-  function unlockSite() {
-    document.getElementById('authGate').style.display = 'none';
-    document.body.style.overflow = 'auto';
-  }
+<!-- DASHBOARD -->
+<div class="card hidden" id="dashboard">
 
-  document.body.style.overflow = 'hidden';
+  <h1>Available Apartments</h1>
+  <div class="subtitle">Based on your selected area</div>
+
+  <div class="listing">
+    <strong>1 Bedroom Apartment</strong>
+    Modern unit · Safe neighborhood · Near transit
+  </div>
+
+  <div class="listing">
+    <strong>2 Bedroom Apartment</strong>
+    Family friendly · Parking included · Quiet area
+  </div>
+
+  <div class="listing">
+    <strong>Studio Apartment</strong>
+    Affordable · Move-in ready · Utilities available
+  </div>
+
+  <button class="secondary" onclick="enableFaceID()">Enable Face ID for Next Login</button>
+
+  <div class="divider"></div>
+
+  <strong>Secure Chat</strong>
+  <div class="chat-box" id="chatBox">
+    <div><em>Support:</em> Hi, how can I help you today?</div>
+  </div>
+
+  <div class="chat-input">
+    <input id="chatInput" placeholder="Type your message…">
+    <button onclick="sendChat()">Send</button>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="contact">
+    <a class="telegram" href="https://t.me/SSG_011" target="_blank">Message on Telegram</a>
+    <a class="email" href="mailto:capitalcresthousing@gmail.com">Email Support</a>
+    <a class="phone" href="tel:+1234567890">Call Directly</a>
+  </div>
+
+  <div class="footer">Inspections scheduled after confirmation</div>
+</div>
+
+</div>
+
+<script>
+function login(){
+  document.getElementById("loginCard").classList.add("hidden");
+  document.getElementById("dashboard").classList.remove("hidden");
+}
+
+function sendChat(){
+  const input=document.getElementById("chatInput");
+  if(!input.value)return;
+  const box=document.getElementById("chatBox");
+  box.innerHTML+=`<div><strong>You:</strong> ${input.value}</div>`;
+  box.scrollTop=box.scrollHeight;
+  input.value="";
+}
+
+function enableFaceID(){
+  alert("Face ID enabled for future logins on this device.");
+}
 </script>
-<a href="https://t.me/SSG_011"
-   target="_blank"
-   style="
-     position:fixed;
-     bottom:22px;
-     right:22px;
-     background:#229ED9;
-     color:white;
-     padding:14px 20px;
-     border-radius:30px;
-     font-weight:600;
-     text-decoration:none;
-     box-shadow:0 12px 30px rgba(0,0,0,.35);
-     z-index:999;
-   ">
-  💬 Secure Telegram Chat
-</a>
+
+</body>
+</html>
