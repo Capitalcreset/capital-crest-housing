@@ -1,140 +1,196 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Capital Crest Housing</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta charset="UTF-8">
+<title>Capital Crest Housing</title>
 
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: linear-gradient(180deg, #050b18, #0b1635);
-      color: white;
-    }
-    .container {
-      max-width: 400px;
-      margin: 60px auto;
-      padding: 20px;
-    }
-    h1 {
-      text-align: center;
-    }
-    .card {
-      background: #0f1e4d;
-      padding: 15px;
-      border-radius: 12px;
-      text-align: center;
-      margin-bottom: 20px;
-    }
-    input {
-      width: 100%;
-      padding: 14px;
-      margin: 10px 0;
-      border-radius: 10px;
-      border: none;
-      font-size: 16px;
-    }
-    button {
-      width: 100%;
-      padding: 14px;
-      background: #2563eb;
-      color: white;
-      font-size: 18px;
-      border: none;
-      border-radius: 12px;
-      cursor: pointer;
-    }
-    .hidden {
-      display: none;
-    }
-    .dashboard {
-      margin-top: 20px;
-    }
-    .listing {
-      background: #111c44;
-      padding: 15px;
-      border-radius: 10px;
-      margin-bottom: 12px;
-    }
-  </style>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+*{box-sizing:border-box}
+body{
+  margin:0;
+  background:#020617;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto;
+  color:#fff;
+}
+.container{
+  max-width:420px;
+  margin:20px auto;
+  padding:16px;
+}
+.card{
+  background:#020617;
+  border-radius:18px;
+  padding:20px;
+  margin-bottom:18px;
+  box-shadow:0 20px 50px rgba(0,0,0,.8);
+}
+h1,h2{text-align:center;margin:0}
+.sub{text-align:center;font-size:13px;opacity:.7;margin:8px 0 14px}
+
+input,button{
+  width:100%;
+  padding:14px;
+  margin-bottom:10px;
+  border-radius:12px;
+  border:none;
+  font-size:15px;
+}
+button{
+  background:#2563eb;
+  color:#fff;
+  font-weight:600;
+  cursor:pointer;
+}
+.hidden{display:none}
+
+.notice{
+  background:linear-gradient(135deg,#1d4ed8,#2563eb);
+  padding:14px;
+  border-radius:14px;
+  text-align:center;
+  margin-bottom:16px;
+}
+
+.listing{
+  background:rgba(255,255,255,.07);
+  padding:14px;
+  border-radius:14px;
+  margin-bottom:12px;
+}
+.badge{
+  font-size:11px;
+  padding:4px 8px;
+  border-radius:8px;
+}
+.available{background:#166534}
+.rented{background:#7f1d1d}
+
+.chat{
+  background:#020617;
+  border-radius:14px;
+  padding:12px;
+  height:180px;
+  overflow-y:auto;
+  font-size:13px;
+}
+.footer{
+  text-align:center;
+  font-size:12px;
+  opacity:.6;
+  margin-top:16px;
+}
+a{color:#93c5fd;text-decoration:none}
+</style>
 </head>
+
 <body>
+<div class="container">
 
-<div class="container" id="authBox">
+<!-- AUTH -->
+<div class="card" id="auth">
+  <h2>Login / Sign Up</h2>
+  <p class="sub">Secure access to listings</p>
+
+  <input id="email" type="email" placeholder="Email">
+  <input id="password" type="password" placeholder="Password">
+
+  <button id="signupBtn">Create Account</button>
+  <button id="loginBtn">Login</button>
+
+  <p id="authMsg" class="sub"></p>
+</div>
+
+<!-- DASHBOARD -->
+<div class="card hidden" id="dashboard">
   <h1>Capital Crest Housing</h1>
+  <p class="sub">Verified apartment listings</p>
 
-  <div class="card">
-    <strong>$100 Inspection & Referral Fee</strong><br/>
-    <small>70% refundable if no suitable apartment is found</small>
+  <div class="notice">
+    <strong>$100 Inspection Fee</strong><br>
+    <span>70% refundable if unsatisfied</span>
   </div>
 
-  <input type="email" id="email" placeholder="Email address" />
-  <input type="password" id="password" placeholder="Password" />
+  <div id="listings"></div>
 
-  <button onclick="loginOrSignup()">Log In / Sign Up</button>
+  <h3>Customer Support</h3>
+  <div class="chat" id="chat">
+    <div>Support: Hello 👋 How can we help?</div>
+  </div>
+
+  <input id="msg" placeholder="Type message">
+  <button onclick="sendMsg()">Send</button>
+
+  <div class="footer">
+    <p>📞 <a href="tel:+13476103825">+1 347 610 3825</a></p>
+    <p>✉️ <a href="mailto:Confidentialuseonly6@gmail.com">Email Us</a></p>
+    <p>💬 <a href="https://t.me/SSG_011">Telegram</a></p>
+  </div>
 </div>
 
-<div class="container hidden" id="dashboard">
-  <h1>Available Apartments</h1>
-
-  <div class="listing">
-    <strong>1 Bedroom Apartment</strong><br/>
-    Downtown Area<br/>
-    Contact: capitalcresthousing@gmail.com
-  </div>
-
-  <div class="listing">
-    <strong>2 Bedroom Apartment</strong><br/>
-    Near Public Transit<br/>
-    Phone: +1 (555) 201-8899
-  </div>
-
-  <button onclick="logout()">Log Out</button>
 </div>
 
-<!-- Firebase SDK -->
+<!-- FIREBASE -->
 <script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-  import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } 
+from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyC5XMLwY_DAkf7cfwDDVoBY",
-    authDomain: "capital-creset-housing.firebaseapp.com",
-    projectId: "capital-creset-housing",
-    storageBucket: "capital-creset-housing.appspot.com",
-    messagingSenderId: "203155522222",
-    appId: "1:203155522222:web:acbe54ea31",
-    measurementId: "G-CMJVHSFMDL"
-  };
+/* 🔴 REPLACE WITH YOUR REAL FIREBASE CONFIG */
+const firebaseConfig = {
+  apiKey: "PASTE_API_KEY",
+  authDomain: "capital-creset-housing.firebaseapp.com",
+  projectId: "capital-creset-housing",
+  appId: "PASTE_APP_ID"
+};
 
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
 
-  window.loginOrSignup = async () => {
-    const email = document.getElementById("email").value;
-    const password = document.getElementById("password").value;
+const authBox = document.getElementById("auth");
+const dash = document.getElementById("dashboard");
+const msg = document.getElementById("authMsg");
 
-    try {
-      await signInWithEmailAndPassword(auth, email, password);
-    } catch {
-      await createUserWithEmailAndPassword(auth, email, password);
-    }
-  };
+document.getElementById("signupBtn").onclick = () => {
+  createUserWithEmailAndPassword(auth, email.value, password.value)
+    .then(() => msg.textContent = "Account created. You can log in.")
+    .catch(e => msg.textContent = e.message);
+};
 
-  window.logout = () => {
-    signOut(auth);
-  };
+document.getElementById("loginBtn").onclick = () => {
+  signInWithEmailAndPassword(auth, email.value, password.value)
+    .then(() => {
+      authBox.classList.add("hidden");
+      dash.classList.remove("hidden");
+      loadListings();
+    })
+    .catch(e => msg.textContent = e.message);
+};
 
-  onAuthStateChanged(auth, user => {
-    if (user) {
-      document.getElementById("authBox").classList.add("hidden");
-      document.getElementById("dashboard").classList.remove("hidden");
-    } else {
-      document.getElementById("authBox").classList.remove("hidden");
-      document.getElementById("dashboard").classList.add("hidden");
-    }
+function loadListings(){
+  const data=[
+    ["2 Bedroom – Bowie","Available"],
+    ["1 Bedroom – Largo","Rented"],
+    ["3 Bedroom – Suitland","Available"],
+    ["Studio – District Heights","Available"]
+  ];
+  const box=document.getElementById("listings");
+  box.innerHTML="";
+  data.forEach(d=>{
+    box.innerHTML+=`
+      <div class="listing">
+        <strong>${d[0]}</strong><br>
+        <span class="badge ${d[1]==="Available"?"available":"rented"}">${d[1]}</span>
+      </div>`;
   });
+}
+
+window.sendMsg = ()=>{
+  if(!msg.value) return;
+  document.getElementById("chat").innerHTML+=`<div>You: ${msg.value}</div>`;
+  msg.value="";
+};
 </script>
 
 </body>
