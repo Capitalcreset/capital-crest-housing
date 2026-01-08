@@ -17,22 +17,17 @@ html,body{
   font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto;
 }
 
-body{
-  display:flex;
-  justify-content:center;
-}
-
 .app{
   width:100vw;
   height:100vh;
-  background:radial-gradient(circle at top,#0f172a,#020617);
   overflow-y:auto;
   padding:16px;
+  background:radial-gradient(circle at top,#0f172a,#020617);
 }
 
 .card{
-  max-width:420px;
-  margin:0 auto;
+  max-width:430px;
+  margin:0 auto 20px;
   background:rgba(2,6,23,.96);
   border-radius:18px;
   padding:22px;
@@ -40,18 +35,8 @@ body{
   color:#fff;
 }
 
-h1{
-  text-align:center;
-  font-size:22px;
-  margin-top:0;
-}
-
-.subtitle{
-  text-align:center;
-  font-size:14px;
-  opacity:.85;
-  margin-bottom:16px;
-}
+h1{text-align:center;font-size:22px;margin-top:0}
+.subtitle{text-align:center;font-size:14px;opacity:.85;margin-bottom:16px}
 
 .notice{
   background:linear-gradient(135deg,#1d4ed8,#2563eb);
@@ -60,31 +45,34 @@ h1{
   text-align:center;
   margin-bottom:20px;
 }
-
 .notice strong{font-size:18px;display:block}
 .notice span{font-size:13px}
 
-input,button{
+input,select,button{
   width:100%;
   padding:14px;
   border-radius:12px;
   border:none;
-  font-size:16px;
+  font-size:15px;
+  margin-bottom:10px;
 }
 
 button{
   background:#2563eb;
   color:#fff;
   font-weight:600;
-  margin-top:10px;
 }
 
 .hidden{display:none}
 
-/* LISTINGS */
+.filters{
+  display:flex;
+  gap:8px;
+}
+
 .section-title{
-  font-size:16px;
   margin:18px 0 10px;
+  font-size:16px;
   opacity:.9;
 }
 
@@ -95,15 +83,8 @@ button{
   margin-bottom:14px;
 }
 
-.listing strong{
-  font-size:15px;
-}
-
-.listing p{
-  font-size:13px;
-  opacity:.85;
-  margin:6px 0;
-}
+.listing strong{display:block}
+.listing p{font-size:13px;opacity:.85}
 
 .tag{
   display:inline-block;
@@ -114,27 +95,18 @@ button{
   margin-right:6px;
 }
 
-/* CHAT */
-.chat-box{
-  background:#020617;
-  border-radius:14px;
-  padding:12px;
-  height:180px;
-  overflow-y:auto;
-  font-size:14px;
-}
-
-.chat-input{
-  display:flex;
-  gap:6px;
+.save{
   margin-top:8px;
+  background:#334155;
 }
 
-.chat-input input{
-  flex:1;
+.loading{
+  text-align:center;
+  font-size:14px;
+  opacity:.8;
+  padding:20px;
 }
 
-/* CONTACT */
 .contact a{
   display:block;
   padding:14px;
@@ -150,12 +122,7 @@ button{
 .email{background:#0f766e}
 .phone{background:#166534}
 
-.footer{
-  text-align:center;
-  font-size:12px;
-  opacity:.6;
-  margin:16px 0;
-}
+.footer{text-align:center;font-size:12px;opacity:.6;margin:16px 0}
 </style>
 </head>
 
@@ -181,59 +148,90 @@ button{
 <!-- DASHBOARD -->
 <div class="card hidden" id="dash">
   <h1>Available Apartments</h1>
-  <div class="subtitle">Private listings matched to your area</div>
+  <div class="subtitle">Matched listings in your area</div>
 
-  <div class="section-title">Recently Added</div>
+  <!-- FILTERS -->
+  <div class="filters">
+    <select>
+      <option>Bedrooms</option>
+      <option>Studio</option>
+      <option>1 Bedroom</option>
+      <option>2 Bedrooms</option>
+    </select>
 
-  <div class="listing">
-    <strong>1 Bedroom Apartment – Upper Marlboro</strong>
-    <p>Quiet residential area, updated kitchen, near public transit.</p>
-    <span class="tag">$1,300–$1,450</span><span class="tag">Utilities negotiable</span>
+    <select>
+      <option>Price Range</option>
+      <option>$800 – $1,000</option>
+      <option>$1,000 – $1,400</option>
+      <option>$1,400 – $2,000</option>
+    </select>
   </div>
 
-  <div class="listing">
-    <strong>Studio Apartment – Kettering</strong>
-    <p>Ideal for single occupancy. Secure building, parking available.</p>
-    <span class="tag">$1,100–$1,250</span><span class="tag">Immediate move-in</span>
-  </div>
+  <!-- LOADING -->
+  <div class="loading" id="loading">Loading listings…</div>
 
-  <div class="listing">
-    <strong>2 Bedroom Apartment – Largo Area</strong>
-    <p>Family-friendly neighborhood, schools nearby, in-unit laundry.</p>
-    <span class="tag">$1,700–$1,900</span><span class="tag">Pet friendly</span>
-  </div>
+  <!-- LISTINGS -->
+  <div id="listings" class="hidden">
 
-  <div class="section-title">More Options</div>
+    <!-- MANY LISTINGS -->
+    <div class="listing">
+      <strong>1 Bedroom – Upper Marlboro</strong>
+      <p>Updated unit, quiet street, close to shopping.</p>
+      <span class="tag">$1,350–$1,500</span>
+      <button class="save">Save Listing</button>
+    </div>
 
-  <div class="listing">
-    <strong>1 Bedroom Basement Unit</strong>
-    <p>Private entrance, modern renovation, flexible lease terms.</p>
-    <span class="tag">$1,000–$1,150</span>
-  </div>
+    <div class="listing">
+      <strong>Studio – Kettering</strong>
+      <p>Secure building, parking included, move-in ready.</p>
+      <span class="tag">$1,100–$1,250</span>
+      <button class="save">Save Listing</button>
+    </div>
 
-  <div class="listing">
-    <strong>Shared Housing (Private Room)</strong>
-    <p>Furnished room, utilities included, short-term accepted.</p>
-    <span class="tag">$850–$950</span>
-  </div>
+    <div class="listing">
+      <strong>2 Bedroom – Largo</strong>
+      <p>Family friendly, schools nearby, pet friendly.</p>
+      <span class="tag">$1,750–$1,950</span>
+      <button class="save">Save Listing</button>
+    </div>
 
-  <div class="section-title">Secure Messaging</div>
+    <div class="listing">
+      <strong>Private Room – Shared Home</strong>
+      <p>Furnished, utilities included, flexible lease.</p>
+      <span class="tag">$850–$950</span>
+      <button class="save">Save Listing</button>
+    </div>
 
-  <div class="chat-box" id="chat">
-    <div><em>Support:</em> Let me know which listings interest you.</div>
-  </div>
+    <div class="listing">
+      <strong>Basement Apartment</strong>
+      <p>Private entrance, renovated, quiet owner.</p>
+      <span class="tag">$1,000–$1,200</span>
+      <button class="save">Save Listing</button>
+    </div>
 
-  <div class="chat-input">
-    <input id="msg" placeholder="Type a message">
-    <button onclick="send()">Send</button>
+    <!-- SCROLL FEEL -->
+    <div class="listing">
+      <strong>1 Bedroom – Bowie Area</strong>
+      <p>Modern finishes, in-unit laundry.</p>
+      <span class="tag">$1,400–$1,600</span>
+      <button class="save">Save Listing</button>
+    </div>
+
+    <div class="listing">
+      <strong>Studio – Capitol Heights</strong>
+      <p>Affordable, transit nearby.</p>
+      <span class="tag">$950–$1,050</span>
+      <button class="save">Save Listing</button>
+    </div>
+
   </div>
 
   <div class="section-title">Direct Contact</div>
 
   <div class="contact">
-    <a class="telegram" href="https://t.me/SSG_011">Message on Telegram</a>
-    <a class="email" href="mailto:Confidentialuseonly6@gmail.com">Email Support</a>
-    <a class="phone" href="tel:+13476103825">Call Directly</a>
+    <a class="telegram" href="https://t.me/SSG_011">Telegram</a>
+    <a class="email" href="mailto:Confidentialuseonly6@gmail.com">Email</a>
+    <a class="phone" href="tel:+13476103825">Call</a>
   </div>
 
   <div class="footer">Capital Crest Housing · Private Access</div>
@@ -245,15 +243,11 @@ button{
 function enter(){
   document.getElementById("login").classList.add("hidden");
   document.getElementById("dash").classList.remove("hidden");
-  window.scrollTo(0,0);
-}
 
-function send(){
-  const m=document.getElementById("msg");
-  if(!m.value)return;
-  document.getElementById("chat").innerHTML+=
-    `<div><strong>You:</strong> ${m.value}</div>`;
-  m.value="";
+  setTimeout(()=>{
+    document.getElementById("loading").classList.add("hidden");
+    document.getElementById("listings").classList.remove("hidden");
+  },1500);
 }
 </script>
 
