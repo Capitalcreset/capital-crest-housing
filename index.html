@@ -23,7 +23,7 @@ html,body{
 }
 
 .card{
-  max-width:430px;
+  max-width:440px;
   margin:0 auto 20px;
   background:#020617;
   border-radius:20px;
@@ -64,7 +64,7 @@ button{
 
 .section-title{
   font-size:15px;
-  margin:18px 0 10px;
+  margin:22px 0 10px;
   opacity:.85;
 }
 
@@ -88,6 +88,7 @@ button{
 
 .available{background:#166534}
 .rented{background:#7f1d1d}
+.saved{background:#1e40af}
 
 .save-btn{
   margin-top:8px;
@@ -97,6 +98,34 @@ button{
 .disabled{
   opacity:.45;
   pointer-events:none;
+}
+
+/* CHAT */
+.chat-box{
+  background:#020617;
+  border-radius:14px;
+  padding:12px;
+  height:180px;
+  overflow-y:auto;
+  font-size:13px;
+}
+.chat-msg{
+  margin-bottom:8px;
+}
+.support{opacity:.7}
+.user{font-weight:600}
+
+.chat-input{
+  display:flex;
+  margin-top:10px;
+}
+.chat-input input{
+  flex:1;
+  margin:0;
+}
+.chat-input button{
+  width:auto;
+  margin-left:8px;
 }
 
 .contact a{
@@ -141,15 +170,15 @@ button{
 <div class="card hidden" id="dashboard">
 
   <h1>Apartment Listings</h1>
-  <div class="subtitle">Scroll to explore availability</div>
+  <div class="subtitle">Scroll to explore verified availability</div>
 
-  <div class="section-title">Available & Recently Rented</div>
+  <div class="section-title">Listings</div>
   <div id="listings">
 
-    <!-- AVAILABLE -->
+    <!-- MANY LISTINGS -->
     <div class="listing available">
       <strong>1 Bedroom – Upper Marlboro</strong>
-      <p>Modern unit, quiet neighborhood.</p>
+      <p>Modern unit · Quiet area · Parking</p>
       <span class="badge available">Available</span>
       <span class="badge">$1,350–$1,500</span>
       <button class="save-btn" onclick="save(this)">Save Listing</button>
@@ -157,50 +186,75 @@ button{
 
     <div class="listing available">
       <strong>Studio – Kettering</strong>
-      <p>Secure building, parking included.</p>
+      <p>Secure building · Close to transit</p>
       <span class="badge available">Available</span>
       <span class="badge">$1,100–$1,250</span>
       <button class="save-btn" onclick="save(this)">Save Listing</button>
     </div>
 
-    <!-- RENTED -->
     <div class="listing rented">
       <strong>2 Bedroom – Largo</strong>
-      <p>Family-friendly, pet friendly.</p>
+      <p>Family friendly · Recently leased</p>
       <span class="badge rented">Rented</span>
       <span class="badge">$1,750–$1,950</span>
       <button class="save-btn disabled">Unavailable</button>
     </div>
 
     <div class="listing available">
-      <strong>Private Room – Shared Home</strong>
-      <p>Furnished, utilities included.</p>
+      <strong>Basement Apartment – Bowie</strong>
+      <p>Private entrance · Renovated</p>
       <span class="badge available">Available</span>
-      <span class="badge">$850–$950</span>
+      <span class="badge">$1,200–$1,350</span>
       <button class="save-btn" onclick="save(this)">Save Listing</button>
     </div>
 
     <div class="listing rented">
-      <strong>Basement Apartment – Bowie</strong>
-      <p>Private entrance, newly leased.</p>
+      <strong>Private Room – Capitol Heights</strong>
+      <p>Shared home · Utilities included</p>
       <span class="badge rented">Rented</span>
-      <span class="badge">$1,000–$1,200</span>
+      <span class="badge">$850–$950</span>
       <button class="save-btn disabled">Unavailable</button>
     </div>
 
     <div class="listing available">
-      <strong>1 Bedroom – Capitol Heights</strong>
-      <p>Near transit, renovated kitchen.</p>
+      <strong>1 Bedroom – District Heights</strong>
+      <p>Near transit · Updated kitchen</p>
       <span class="badge available">Available</span>
-      <span class="badge">$1,400–$1,550</span>
+      <span class="badge">$1,400–$1,600</span>
       <button class="save-btn" onclick="save(this)">Save Listing</button>
+    </div>
+
+    <div class="listing available">
+      <strong>2 Bedroom – Suitland</strong>
+      <p>Spacious layout · Balcony</p>
+      <span class="badge available">Available</span>
+      <span class="badge">$1,650–$1,800</span>
+      <button class="save-btn" onclick="save(this)">Save Listing</button>
+    </div>
+
+    <div class="listing rented">
+      <strong>Studio – New Carrollton</strong>
+      <p>High demand · Fully leased</p>
+      <span class="badge rented">Rented</span>
+      <span class="badge">$1,200–$1,350</span>
+      <button class="save-btn disabled">Unavailable</button>
     </div>
 
   </div>
 
-  <div class="section-title">Saved Listings</div>
+  <div class="section-title" id="savedTitle">Saved Listings</div>
   <div id="saved">
     <p style="font-size:13px;opacity:.6">No saved listings yet.</p>
+  </div>
+
+  <!-- SUPPORT CHAT -->
+  <div class="section-title">Customer Care / Support</div>
+  <div class="chat-box" id="chat">
+    <div class="chat-msg support"><em>Support:</em> Hello 👋 How can we assist you today?</div>
+  </div>
+  <div class="chat-input">
+    <input id="chatInput" placeholder="Type your message">
+    <button onclick="send()">Send</button>
   </div>
 
   <div class="section-title">Contact</div>
@@ -223,11 +277,30 @@ function login(){
 
 function save(button){
   const listing = button.closest(".listing");
-  button.remove();
   const saved = document.getElementById("saved");
 
+  const clone = listing.cloneNode(true);
+  clone.querySelector("button")?.remove();
+
+  const badge = document.createElement("span");
+  badge.className = "badge saved";
+  badge.textContent = "Saved";
+  clone.appendChild(badge);
+
   if(saved.children[0]?.tagName==="P") saved.innerHTML="";
-  saved.appendChild(listing);
+  saved.appendChild(clone);
+
+  document.getElementById("savedTitle").scrollIntoView({behavior:"smooth"});
+}
+
+function send(){
+  const input = document.getElementById("chatInput");
+  if(!input.value) return;
+
+  const chat = document.getElementById("chat");
+  chat.innerHTML += `<div class="chat-msg"><span class="user">You:</span> ${input.value}</div>`;
+  input.value="";
+  chat.scrollTop = chat.scrollHeight;
 }
 </script>
 
