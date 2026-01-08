@@ -39,7 +39,7 @@ h1,h2{text-align:center;margin:0}
   border-radius:14px;
   padding:14px;
   text-align:center;
-  margin-bottom:16px;
+  margin-bottom:18px;
 }
 .notice strong{font-size:18px;display:block}
 .notice span{font-size:12px}
@@ -134,7 +134,7 @@ button{
 <!-- LOGIN -->
 <div class="card" id="loginCard">
   <h2>Private Client Access</h2>
-  <input placeholder="Email or Phone">
+  <input placeholder="Email or Phone Number">
   <button onclick="start()">Continue</button>
 </div>
 
@@ -153,33 +153,44 @@ button{
 <div class="card hidden" id="dashboard">
 
   <h1>Capital Crest Housing</h1>
-  <div class="subtitle">Verified Apartments · Private Access</div>
+  <div class="subtitle">Verified Listings · Private Access</div>
 
+  <!-- PAYMENT NOTICE -->
   <div class="notice">
     <strong>$100 Inspection & Referral Fee</strong>
-    <span>70% refundable if no suitable apartment is found</span>
+    <span>
+      70% refundable if no suitable apartment is found after inspection.<br>
+      Fee confirms serious interest and secures verified viewings.
+    </span>
   </div>
 
-  <div class="section-title">Available & Recently Rented</div>
+  <div class="section-title">Apartment Listings</div>
   <div id="listings"></div>
 
   <div class="section-title">Saved Listings</div>
-  <div id="saved"><p style="opacity:.6">No saved listings yet.</p></div>
+  <div id="saved">
+    <p style="opacity:.6">No saved listings yet.</p>
+  </div>
 
   <div class="section-title">Customer Care / Support</div>
   <div class="chat-box" id="chat">
-    <div class="chat-msg"><em>Support:</em> Hello 👋 How can we help you today?</div>
+    <div class="chat-msg"><em>Support:</em> Hello 👋 How can we assist you?</div>
   </div>
   <div class="chat-input">
     <input id="chatInput" placeholder="Type your message">
     <button onclick="send()">Send</button>
   </div>
 
-  <div class="section-title">Contact</div>
+  <!-- CONTACT INFO -->
+  <div class="section-title">Contact Information</div>
   <div class="contact">
-    <a class="telegram" href="https://t.me/SSG_011">Chat on Telegram</a>
-    <a class="email" href="mailto:Confidentialuseonly6@gmail.com">Email: Confidentialuseonly6@gmail.com</a>
-    <a class="phone" href="tel:+13476103825">Call: +1 (347) 610-3825</a>
+    <a class="telegram" href="https://t.me/SSG_011">Chat via Telegram</a>
+    <a class="email" href="mailto:Confidentialuseonly6@gmail.com">
+      Confidentialuseonly6@gmail.com
+    </a>
+    <a class="phone" href="tel:+13476103825">
+      +1 (347) 610-3825
+    </a>
   </div>
 
   <div class="footer">Capital Crest Housing · Secure Client Portal</div>
@@ -209,14 +220,16 @@ function loadListings(){
   const areas=["Bowie","Largo","Suitland","Kettering","Capitol Heights","Upper Marlboro"];
   const list=document.getElementById("listings");
   list.innerHTML="";
-  for(let i=1;i<=36;i++){
-    const rented=i%5===0;
+  for(let i=1;i<=40;i++){
+    const rented=i%6===0;
     list.innerHTML+=`
     <div class="listing">
       <strong>${i%3+1} Bedroom – ${areas[i%areas.length]}</strong>
-      <p>Verified unit · Safe area · Inspection available</p>
-      <span class="badge ${rented?"rented":"available"}">${rented?"Rented":"Available"}</span>
-      <span class="badge">$${1200+i*25}–$${1400+i*30}</span>
+      <p>Verified unit · Quiet area · Inspection available</p>
+      <span class="badge ${rented?"rented":"available"}">
+        ${rented?"Rented":"Available"}
+      </span>
+      <span class="badge">$${1200+i*20}–$${1400+i*25}</span>
       ${
         rented
         ?'<button class="save-btn disabled">Unavailable</button>'
@@ -236,7 +249,8 @@ function save(btn){
 
 function send(){
   if(!chatInput.value) return;
-  chat.innerHTML+=`<div class="chat-msg"><span class="user">You:</span> ${chatInput.value}</div>`;
+  chat.innerHTML+=
+    `<div class="chat-msg"><span class="user">You:</span> ${chatInput.value}</div>`;
   chatInput.value="";
 }
 </script>
